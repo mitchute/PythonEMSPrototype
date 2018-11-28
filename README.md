@@ -1,5 +1,7 @@
 # PythonEMSPrototype
 
+[![Build Status](https://travis-ci.org/Myoldmopar/PythonEMSPrototype.svg?branch=master)](https://travis-ci.org/Myoldmopar/PythonEMSPrototype)
+
 This is a little standalone sandbox where we can evaluate the design of the new Python-EMS implementation.
 
 ## Questions to answer with this repo
