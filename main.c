@@ -28,6 +28,7 @@ int initPyMSInstances() {
         fprintf(stderr, "Failed to load \"%s\"\n", "ems_implementation");
         return 1;
     }
+    return 0;
 }
 
 int closePyEMS() {
@@ -73,7 +74,9 @@ int
 main(int argc, char *argv[])
 {
     fprintf(stdout, "Starting (Fake) EnergyPlus\n");
-    initPyMSInstances();
+    if (initPyMSInstances() != 0) {
+        return 1;
+    }
     fprintf(stdout, "Performing Sizing\n");
     callEMSInstance("AfterSizing");
     fprintf(stdout, "Inside HVAC TimeStep Loop\n");

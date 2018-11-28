@@ -35,4 +35,4 @@ install:
  - $SH "apt-get install -y python3.6-dev cmake build-essential"
 
 script:
- - $SH "mkdir build && cd build && cmake .. && make && ./EmbeddedPython"
+ - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=. ./build/EmbeddedPython"
