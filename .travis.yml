@@ -1,0 +1,14 @@
+os: linux
+language: python
+python: 3.4
+
+addons:
+  apt:
+    packages:
+    - python3-dev
+
+script:
+- mkdir build && cd build && cmake .. && make
+
+after_success:
+- cd build && ./EmbeddedPython
