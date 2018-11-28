@@ -4,15 +4,11 @@
 my_variable = 1
 
 
-def main(calling_point, data_array):
+def main(data_value):
     global my_variable
-    if calling_point == 'HVACTimeStepLoop':
-        my_variable += data_array[0]
-        print("   __Hit HVACTimeStepLoop, new value of my_variable = " + str(my_variable))
-        return 0
-    else:
-        print("   __called from unused calling point \"%s\" __ignoring__" % calling_point)
-        return 0
+    my_variable += data_value
+    print("   __Hit HVACTimeStepLoop, new value of my_variable = " + str(my_variable))
+    return 0
 
 #
 # class EMSExample1(EMSInterface0):
