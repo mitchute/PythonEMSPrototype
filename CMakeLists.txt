@@ -9,4 +9,7 @@ if(UNIX)
     # I'd like to use the library value string returned by FindPython, but it doesn't have the entire list
     # this is what was returned to me on Ubuntu from `python3-config --ldflags`
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu -L/usr/lib -lpython3.6m -lpthread -ldl  -lutil -lm  -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions")
+elseif(MSVC)
+    # I do _not_ know if this will work, but whatever
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_LIBRARIES}")
 endif()
