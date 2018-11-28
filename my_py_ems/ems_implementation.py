@@ -1,13 +1,13 @@
 # from ems_interface import EMSInterface0
-
+from special_py_package.special_functions import add
 
 my_variable = 1
 
 
 def main(data_value):
     global my_variable
-    my_variable += data_value
-    print("   __Hit HVACTimeStepLoop, new value of my_variable = " + str(my_variable))
+    my_variable = add(my_variable, data_value)
+    print("PyEMS : Hit HVACTimeStepLoop, new value of my_variable = " + str(my_variable))
     return 0
 
 #

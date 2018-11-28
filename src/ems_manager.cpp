@@ -1,18 +1,12 @@
-#include <Python.h>
+#include <string>
 #include <vector>
 
-enum class CallingPoints {  // this would need to get exposed to EMS program writers if calling_point is an argument
-    AFTER_SIZING = 0,
-    HVAC_TIME_STEP_LOOP = 1
-};
-struct EMSCallingPoint {
-    PyObject *pModule;
-    PyObject *pEMSMainFunction;
-    CallingPoints callingPoint;
-};
-std::vector<struct EMSCallingPoint> emsCallingPoints;
+#include <Python.h>
 
-int initPyMSInstances(const char* fileName, const char* functionName, CallingPoints callingPoint) {
+#include <ems_manager.h>
+#include <utility.h>
+
+int EMSManager::initPyMSInstances(const char* fileName, const char* functionName, CallingPoints callingPoint) {
     // initialize Python
     Py_Initialize();
     // load the EMS file
@@ -46,14 +40,14 @@ int initPyMSInstances(const char* fileName, const char* functionName, CallingPoi
     return 0;
 }
 
-int closePyEMS(EMSCallingPoint thisCall) {
+int EMSManager::closePyEMS(EMSCallingPoint thisCall) {
     Py_DECREF(thisCall.pModule);
     if (Py_FinalizeEx() < 0) {
         return 120;
     }
 }
 
-int callEMSInstance(CallingPoints callingPoint, EMSCallingPoint thisCall)
+int EMSManager::callEMSInstance(CallingPoints callingPoint, EMSCallingPoint thisCall)
 {
 
     if (thisCall.callingPoint != callingPoint) {
@@ -71,33 +65,14 @@ int callEMSInstance(CallingPoints callingPoint, EMSCallingPoint thisCall)
     pValue = PyObject_CallObject(thisCall.pEMSMainFunction, pEMSArgs);
 
     Py_DECREF(pEMSArgs);
-    if (pValue != NULL) {
-        printf("Result of call: %ld\n", PyLong_AsLong(pValue));
+    if (pValue) {
         Py_DECREF(pValue);
     } else {
         Py_DECREF(thisCall.pEMSMainFunction);
         PyErr_Print();
-        fprintf(stderr,"Call failed\n");
+        print_cpp("Call failed!");
         return 1;
     }
 
     return 0;
-}
-
-int
-main(int argc, char *argv[])
-{
-    fprintf(stdout, "Starting (Fake) EnergyPlus\n");
-    if (initPyMSInstances("ems_implementation", "main", CallingPoints::HVAC_TIME_STEP_LOOP) != 0) {
-        return 1;
-    }
-    fprintf(stdout, "Performing Sizing\n");
-    callEMSInstance(CallingPoints::AFTER_SIZING, emsCallingPoints[0]);
-    fprintf(stdout, "Inside HVAC TimeStep Loop\n");
-    callEMSInstance(CallingPoints::HVAC_TIME_STEP_LOOP, emsCallingPoints[0]);
-    callEMSInstance(CallingPoints::HVAC_TIME_STEP_LOOP, emsCallingPoints[0]);
-    callEMSInstance(CallingPoints::HVAC_TIME_STEP_LOOP, emsCallingPoints[0]);
-    fprintf(stdout, "Timesteps Complete\n");
-    closePyEMS(emsCallingPoints[0]);
-    fprintf(stdout, "EnergyPlus Complete\n");
 }

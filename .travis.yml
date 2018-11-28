@@ -18,4 +18,4 @@ install:
  - $SH "apt-get install -y python3.6-dev cmake build-essential"
 
 script:
- - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=. ./build/EnergyPlusPyEMS"
+ - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
