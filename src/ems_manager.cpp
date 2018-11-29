@@ -1,7 +1,13 @@
 #include <string>
 #include <vector>
 
+#ifdef _DEBUG
+#undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
 #include <Python.h>
+#endif
 
 #include <ems_manager.h>
 #include <utility.h>

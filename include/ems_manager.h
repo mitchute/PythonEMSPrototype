@@ -3,7 +3,13 @@
 
 #include <vector>
 
+#ifdef _DEBUG
+#undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
 #include <Python.h>
+#endif
 
 enum class CallingPoints {  // hardwired because this would need to get exposed to EMS program writers if calling_point is an argument
     AFTER_SIZING = 0,
