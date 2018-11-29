@@ -13,10 +13,14 @@ matrix:
         - $SH "apt-get update"
         - $SH "apt-get install -y locales && locale-gen en_US.UTF-8"
         - $SH "apt-get install -y python3.6-dev cmake build-essential"
-      script: $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
+      script:
+        - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
+        - $SH "mkdir tmp_build && tar -zcvf tmp_build/PyEMSPrototype_linux_Debug.tar.gz build/EnergyPlusPyEMS"
     - os: osx
       name: Mac
-      script: mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
+      script:
+        - mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
+        - mkdir tmp_build && tar -zcvf tmp_build/PyEMSPrototype_Mac_Debug.tar.gz build/EnergyPlusPyEMS
     - os: windows
       name: Windows
       install: choco install python3
@@ -24,3 +28,15 @@ matrix:
         - mkdir build && cd build && cmake .. -G "Visual Studio 15 Win64" && cmake --build . && cd ..
         - cp "/C/Python37/python37.dll" "build/Debug"
         - PYTHONPATH=my_py_ems ./build/Debug/EnergyPlusPyEMS
+        - mkdir tmp_build && tar.exe -zcvf tmp_build/PyEMSPrototype_Win64_Debug.tar.gz build/Debug/
+
+deploy:
+  - provider: releases
+    skip_cleanup: true
+    api_key:
+      secure: "NmIO6PzGGFPpddUD0/Vi07LnnfOqsRufCLkkfmv7b0ZP0I68iN8Pd7t0GgNSUa8aeP82xqQwE31eHnstmUTrWoMsza/VS5wTjk83mvFo3V8cS7qj8jlCnerZ4v5Q/Y7YOH5Fff0KzGr+mg+s5KcgmEFo3x3PoL6SpQo6upwspo/clCNsTLtnEw3Uxhi7a1ifD9mzjmQHKLJg0KLsJ6dcPqFuR6lsZBle64aHFTJudDM4FSHDvRNUujJXlWBY2aEiNNZPFaTIN0MQ+KlS1oUpvrjwUCGL2hhUda52ahf5aIatfE3BlLe1cl+v+72k0fjwGOaJqwFGesU63xio+je7LMV5NoEOyUFQNGYOXq6b3TNwaFlr7SsU+b0KoitYpxQijag8d5giX2P+Xg3EFPNtkhaikSBxf9brPXvWbKUONVjtd9dEoEDuh6ItrYtEpEMJwQMwdeYY4pnOzNRvsRLv9ZcNyGsXc1RHXghoDWEkSTwTJ60VumK+cmqzZOFU4Huzt8oW0sUhDQCAydOytQ8k5XsZuAEOZ58ax2F1TGW7S5+494x9P2UZsDHccrp0aJEN6q9WD15mLWPdMxOxB5K05p/xcvAqzFYPv0Om2Pu6JHzXyosai8qdy46ZlJZhrenc2zR7ATV8z5OUfgLQcFMyYzCe/ZtXVnnB2+DtaRKgPWI="
+    file_glob: true
+    file: tmp_build/*
+    on:
+      repo: Myoldmopar/PythonEMSPrototype
+      tags: true
