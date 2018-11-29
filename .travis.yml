@@ -22,5 +22,5 @@ matrix:
       install: choco install python3
       script:
         - mkdir build && cd build && cmake .. -G "Visual Studio 15 Win64" && cmake --build . && cd ..
-        - copy "/C/Python37/python37.dll" "build/Debug"
+        - cp "/C/Python37/python37.dll" "build/Debug"
         - PYTHONPATH=my_py_ems ./build/Debug/EnergyPlusPyEMS
