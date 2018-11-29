@@ -1,19 +1,23 @@
 language: cpp
 
-sudo: required
+matrix:
+    include:
+        - os: linux
+          sudo: required
+          services: docker
+          env: SH="docker exec -t ubuntu-test bash -c"
+        - os: osx
+          language: generic
 
-services:
-  - docker
-
-env: SH="docker exec -t ubuntu-test bash -c"
 
 before_install:
-  - docker run -d --name ubuntu-test -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8" -v $(pwd):/travis -w /travis ubuntu:latest tail -f /dev/null
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; docker run -d --name ubuntu-test -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8" -v $(pwd):/travis -w /travis ubuntu:latest tail -f /dev/null; fi
 
 install:
- - $SH "apt-get update"
- - $SH "apt-get install -y locales && locale-gen en_US.UTF-8"
- - $SH "apt-get install -y python3.6-dev cmake build-essential"
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then $SH "apt-get update"; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; $SH "apt-get install -y locales && locale-gen en_US.UTF-8"; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; $SH "apt-get install -y python3.6-dev cmake build-essential"; fi
 
 script:
- - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"; fi
+ - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"; fi
