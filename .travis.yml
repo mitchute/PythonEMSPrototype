@@ -21,4 +21,4 @@ matrix:
       name: Windows
       install: choco install python3
       script:
-        - mkdir build && cd build && cmake .. && mingw32-make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
+        - mkdir build && cd build && cmake .. && mingw32-make help && mingw32-make EnergyPlusPyEMS && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
