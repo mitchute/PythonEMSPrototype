@@ -15,31 +15,39 @@ matrix:
     - $SH "apt-get install -y python3.6-dev cmake build-essential"
     script:
     - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
-    - $SH "mkdir tmp_build && cp build/EnergyPlusPyEMS tmp_build/ && cp -r my_py_ems/ tmp_build/ && cp scripts/launch_linux.sh tmp_build/"
-    - $SH "mkdir release && tar -zcvf release/PyEMSPrototype_linux_debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_linux.sh"
+    - $SH "mkdir tmp_build && cp build/EnergyPlusPyEMS tmp_build/ && cp -r my_py_ems/ tmp_build/ && cp scripts/launch_bash.sh tmp_build/"
+    - $SH "mkdir release && tar -zcvf release/PyEMSPrototype_linux_debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh"
   - os: osx
     name: Mac
     script:
-    - mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems
-      ./build/EnergyPlusPyEMS
-    - mkdir tmp_build && tar -zcvf tmp_build/PyEMSPrototype_Mac_Debug.tar.gz build/EnergyPlusPyEMS
+    - mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
+    - mkdir tmp_build
+    - cp build/EnergyPlusPyEMS tmp_build/
+    - cp /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python tmp_build/
+    - cp -r my_py_ems/ tmp_build/
+    - cp scripts/launch_bash.sh tmp_build/
+    - mkdir release && tar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh Python
   - os: windows
     name: Windows
     install: choco install python3
     script:
-    - mkdir build && cd build && cmake .. -G "Visual Studio 15 Win64" && cmake --build
-      . && cd ..
+    - mkdir build && cd build && cmake .. -G "Visual Studio 15 Win64" && cmake --build . && cd ..
     - cp "/C/Python37/python37.dll" "build/Debug"
     - PYTHONPATH=my_py_ems ./build/Debug/EnergyPlusPyEMS
-    - mkdir tmp_build && tar.exe -zcvf tmp_build/PyEMSPrototype_Win64_Debug.tar.gz
-      build/Debug/
+    - mkdir tmp_build
+    - cp build/Debug/EnergyPlusPyEMS.exe tmp_build/
+    - cp /C/Python37/python37.dll tmp_build/
+    - cp -r my_py_ems/ tmp_build/
+    - cp scripts/launch_bash.sh tmp_build/
+    - mkdir release && tar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh python37.dll
+
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: vyIlrPAUJWCx8/jAtRyCBqS5bgWIuVRHyZ6Ka/bAOTTt++ww4J6RZq7fSP8ry0ox7d7EYBlhoaBr3vL3F5r/bpAnCbKimDbO6ESZNiMFO7IYWOm2Gi6IQIEyVskfDvlRI0D5SLjQD3twbq+rJrCOfPqWs9I8LTf1UgzjKKgtRvsFFjKEiOpbQxmioZHQCXoAu8ptxiwpRM/PvBzvRm49vhybA3PjpHEuKbRurLiF9wyEfGMlVRCg9u9EUns87cjtAtFCmAjAwVc+G6jQouRs7kaPxy2pgr9RnVAYXPPq3Z7WeGABkJ7Ggpc+BTHGbQ3x1P5/q//O7knSO55GKSqTtvqhjUXGamjWke5wKYjh9XEF0fso27S4N/7R0GovNO3Gda+T0cHS3oBKCk9J4VY8QsQAqig8BdZrzoWg9qBJVhYlsUE5muvaWOc4SS/83xMmr2e5daf0Dtcnny6KIZwchSzUeVHCYmzcTY0P34ItkyQHS4q6jdVLcS85q3iOvKngvVi1j4B3fCk71RDI7BRL4RvbQSCD/KnxfpschMCIWDors0KpJ2ijK6F0L0Mek2GGP/uMSwZ789CXUuh9X4fTwxKffwARPbYLUzqvrlUZ6EZeIEvS6jKuuj0sa3NNaxU7og+RAnrkrUZZXBd0gpY3nmCRz9brKburG8qcVkmTiHA=
   file_glob: true
-  file: tmp_build/*
+  file: release/*
   on:
     repo: Myoldmopar/PythonEMSPrototype
     tags: true
