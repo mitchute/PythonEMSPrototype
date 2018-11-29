@@ -6,7 +6,7 @@ a = Analysis(
     root_files,
     pathex=[],
     binaries=[],
-    datas=added_files,
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
