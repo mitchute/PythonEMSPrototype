@@ -32,7 +32,7 @@ elseif(APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin -lpython3.6m -ldl -framework CoreFoundation")
 else()
     # on Windows (well, on Travis-Windows) Chocolately will install python 3.7
-    target_link_libraries(EnergyPlusPyEMS python3.7)
+    # target_link_libraries(EnergyPlusPyEMS python3.7)
     # I do _not_ know if this will work, but whatever
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_LIBRARIES}")
 endif()
