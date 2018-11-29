@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.9)
 
 project(EnergyPlusPyEMS)
 
+set(CMAKE_CXX_STANDARD 11)
+
 find_package(PythonLibs 3 REQUIRED)
 
 add_executable(EnergyPlusPyEMS
@@ -14,7 +16,7 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(include)
 target_link_libraries(EnergyPlusPyEMS python3.6)
 
-if(UNIX)
+if(UNIX AND NOT APPLE)
     # I'd like to use the library value string returned by FindPython, but it doesn't have the entire list
     # this is what was returned to me on Ubuntu from `python3-config --ldflags`
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu -L/usr/lib -lpython3.6m -lpthread -ldl  -lutil -lm  -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions")
