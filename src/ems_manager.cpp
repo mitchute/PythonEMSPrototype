@@ -8,7 +8,12 @@
 
 int EMSManager::initPyMSInstances(const char* fileName, const char* functionName, CallingPoints callingPoint) {
     // initialize Python
+    Py_NoSiteFlag = 1;
     Py_Initialize();
+    // Py_SetProgramName(argv[0]);
+    // Py_SetPythonHome('.');
+    // Py_InitializeEx(0);
+
     // load the EMS file
     PyObject *pName = PyUnicode_DecodeFSDefault(fileName);
     /* Error checking of pName left out */
