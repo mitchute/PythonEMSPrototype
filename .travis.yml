@@ -30,6 +30,10 @@ matrix:
   - os: windows
     name: Windows
     install: choco install python3
+    addons:
+      homebrew:
+        packages:
+        - gnu-tar
     script:
     - mkdir build && cd build && cmake .. -G "Visual Studio 15 Win64" && cmake --build . && cd ..
     - cp "/C/Python37/python37.dll" "build/Debug"
@@ -39,7 +43,7 @@ matrix:
     - cp /C/Python37/python37.dll tmp_build/
     - cp -r my_py_ems/ tmp_build/
     - cp scripts/launch_bash.sh tmp_build/
-    - mkdir release && tar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh python37.dll
+    - mkdir release && gtar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh python37.dll
 
 deploy:
   provider: releases
