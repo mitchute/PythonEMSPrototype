@@ -17,7 +17,7 @@ int EMSManager::initPyMSInstances(const char* fileName, const char* functionName
     thisEMSCall.callingPoint = callingPoint;
     // get a reference to the entire EMS module
     PyObject *pModule = PyImport_Import(pName);
-    Py_DECREF(pName);pName;
+    Py_DECREF(pName);
     if (pModule != NULL) {
         thisEMSCall.pModule = pModule;
         // get a reference to the EMS function
@@ -45,6 +45,7 @@ int EMSManager::closePyEMS(EMSCallingPoint thisCall) {
     if (Py_FinalizeEx() < 0) {
         return 120;
     }
+    return 0;
 }
 
 int EMSManager::callEMSInstance(CallingPoints callingPoint, EMSCallingPoint thisCall)
