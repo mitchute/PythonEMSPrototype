@@ -4,6 +4,8 @@
 # Build folders
 build
 cmake-build-debug
+release
+tmp_build
 
 # CLion interface
 .idea
