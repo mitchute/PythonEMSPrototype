@@ -28,7 +28,7 @@ if(UNIX AND NOT APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu -L/usr/lib -lpython3.6m -lpthread -ldl  -lutil -lm  -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions")
 elseif(APPLE AND TRAVIS)
     # Travis uses Python 3.6 on Mac by default
-    target_link_libraries(EnergyPlusPyEMS python3.7)
+    target_link_libraries(EnergyPlusPyEMS python3.6)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin -lpython3.6m -ldl -framework CoreFoundation")
 elseif(APPLE)
     # I use 3.7 on my Mac locally
