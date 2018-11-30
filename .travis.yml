@@ -17,16 +17,27 @@ matrix:
     - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
     - $SH "mkdir tmp_build && cp build/EnergyPlusPyEMS tmp_build/ && cp -r my_py_ems/ tmp_build/ && cp scripts/launch_bash.sh tmp_build/"
     - $SH "mkdir release && tar -zcvf release/PyEMSPrototype_linux_debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh"
+
   - os: osx
     name: Mac
     script:
-    - mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
+    - mkdir build && cd build && cmake .. -DTRAVIS=Y && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
     - mkdir tmp_build
     - cp build/EnergyPlusPyEMS tmp_build/
-    - cp /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python tmp_build/
+    #- cp /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python tmp_build/
     - cp -r my_py_ems/ tmp_build/
     - cp scripts/launch_bash.sh tmp_build/
-    - mkdir release && tar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh Python
+    - cp /usr/local/Cellar/python/3.6.0/Frameworks/Python.framework/Versions/3.6/Python tmp_build/libpython3.6.dylib
+    - cp -r /usr/local/Cellar/python/3.6.0/Frameworks/Python.framework/Versions/3.6/lib tmp_build/
+    - rm lib/libpython3.6.dylib lib/libpython3.6m.dylib
+    - rm -r lib/pkgconfig
+    - cp /usr/local/Cellar/python/3.6.0/Frameworks/Python.framework/Versions/3.6/Resources/Python.app/Contents/MacOSX/Python tmp_build/python3.6
+    - ls /usr/local/Cellar/python3
+    - install_name_tool -change /usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/python3.6
+    - chmod 777 tmp_build/libpython3.6.dylib
+    - install_name_tool -id @executable_path/libpython3.6.dylib tmp_build/libpython3.6.dylib
+    - mkdir release && tar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh Python lib libpython3.6.dylib python3.6
+
   - os: windows
     name: Windows
     install: choco install python3
