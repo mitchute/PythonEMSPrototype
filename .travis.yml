@@ -31,7 +31,7 @@ matrix:
     - rm -f tmp_build/lib/libpython3.6.dylib
     - rm -f tmp_build/lib/libpython3.6m.dylib
     - rm -r tmp_build/lib/pkgconfig
-    - cp /usr/local/Frameworks/Python.framework/Versions/3.6/Resources/Python.app/Contents/MacOSX/Python tmp_build/python3.6
+    - cp /usr/local/Frameworks/Python.framework/Versions/3.6/Resources/Python.app/Contents/MacOS/Python tmp_build/python3.6
     - otool -L tmp_build/python3.6
     - install_name_tool -change /usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/python3.6
     - otool -l tmp_build/libpython3.6.dylib
