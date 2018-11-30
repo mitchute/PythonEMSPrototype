@@ -14,9 +14,7 @@ matrix:
     - $SH "apt-get install -y locales && locale-gen en_US.UTF-8"
     - $SH "apt-get install -y python3.6-dev cmake build-essential"
     script:
-    - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
-    - $SH "mkdir tmp_build && cp build/EnergyPlusPyEMS tmp_build/ && cp -r my_py_ems tmp_build/ && cp scripts/launch.sh tmp_build/"
-    - $SH "mkdir release && tar -zcvf release/PyEMSPrototype_linux_debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh"
+    - $SH "scripts/build_linux_travis.sh"
 
   - os: osx
     name: Mac
