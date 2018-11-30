@@ -24,8 +24,7 @@ matrix:
     - mkdir build && cd build && cmake .. -DTRAVIS=Y && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
     - mkdir tmp_build
     - cp build/EnergyPlusPyEMS tmp_build/
-    #- cp /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python tmp_build/
-    - cp -r my_py_ems/ tmp_build/
+    - cp -r my_py_ems tmp_build/
     - cp scripts/launch_bash.sh tmp_build/
     - cp /usr/local/Cellar/python/3.6.0/Frameworks/Python.framework/Versions/3.6/Python tmp_build/libpython3.6.dylib
     - cp -r /usr/local/Cellar/python/3.6.0/Frameworks/Python.framework/Versions/3.6/lib tmp_build/
@@ -48,7 +47,7 @@ matrix:
     - mkdir tmp_build
     - cp build/Debug/EnergyPlusPyEMS.exe tmp_build/
     - cp /C/Python37/python37.dll tmp_build/
-    - cp -r my_py_ems/ tmp_build/
+    - cp -r my_py_ems tmp_build/
     - cp scripts/launch_bash.sh tmp_build/
     - mkdir release && tar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh python37.dll
 
