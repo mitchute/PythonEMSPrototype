@@ -23,3 +23,8 @@ Setting up a dev environment is really simple; you only need three things:
  - Python (currently targeting 3.6)
  - A C++ compiler (currently using g++)
  - CMake (to build the makefile structure -- I guess technically it's optional if you're a crazy person)
+
+## Python Packaging
+
+Setting this up on Mac was, um, difficult.
+But this helped _so_ much: http://joaoventura.net/blog/2016/embeddable-python-osx/
