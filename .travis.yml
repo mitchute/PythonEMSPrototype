@@ -35,7 +35,7 @@ matrix:
     - install_name_tool -change /usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/python3.6
     - chmod 777 tmp_build/libpython3.6.dylib
     - install_name_tool -id @executable_path/libpython3.6.dylib tmp_build/libpython3.6.dylib
-    - mkdir release && tar -zcvf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh lib libpython3.6.dylib python3.6
+    - mkdir release && tar -zcf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh lib libpython3.6.dylib python3.6
 
   - os: windows
     name: Windows
