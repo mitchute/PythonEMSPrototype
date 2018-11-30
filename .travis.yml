@@ -15,8 +15,8 @@ matrix:
     - $SH "apt-get install -y python3.6-dev cmake build-essential"
     script:
     - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
-    - $SH "mkdir tmp_build && cp build/EnergyPlusPyEMS tmp_build/ && cp -r my_py_ems/ tmp_build/ && cp scripts/launch_bash.sh tmp_build/"
-    - $SH "mkdir release && tar -zcvf release/PyEMSPrototype_linux_debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh"
+    - $SH "mkdir tmp_build && cp build/EnergyPlusPyEMS tmp_build/ && cp -r my_py_ems tmp_build/ && cp scripts/launch.sh tmp_build/"
+    - $SH "mkdir release && tar -zcvf release/PyEMSPrototype_linux_debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh"
 
   - os: osx
     name: Mac
@@ -25,7 +25,7 @@ matrix:
     - mkdir tmp_build
     - cp build/EnergyPlusPyEMS tmp_build/
     - cp -r my_py_ems tmp_build/
-    - cp scripts/launch_bash.sh tmp_build/
+    - cp scripts/launch.sh tmp_build/
     # collect up the Python framework that was used in this build, cleaning out some unnecessary cruft
     - cp /usr/local/Frameworks/Python.framework/Versions/3.6/Python tmp_build/libpython3.6.dylib
     # we don't necessary _need_ python3.6 binary to do anything, it's just another interpreter
@@ -44,8 +44,8 @@ matrix:
     - install_name_tool -change /usr/local/Cellar/python/3.6.5_1/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/python3.6
     - otool -L tmp_build/python3.6
     - install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/EnergyPlusPyEMS
-    - mkdir release && tar -zcf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh lib libpython3.6.dylib python3.6
-    - ./tmp_build/launch_bash.sh
+    - cd tmp_build && ./launch.sh  # calling this here ensures that the Python prep we did in the tmp_build dir works
+    - mkdir release && tar -zcf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh lib libpython3.6.dylib python3.6
 
   - os: windows
     name: Windows
@@ -58,8 +58,8 @@ matrix:
     - cp build/Debug/EnergyPlusPyEMS.exe tmp_build/
     - cp /C/Python37/python37.dll tmp_build/
     - cp -r my_py_ems tmp_build/
-    - cp scripts/launch_bash.sh tmp_build/
-    - mkdir release && tar -zcvf release/PyEMSPrototype_Win64_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh python37.dll
+    - cp scripts/launch.sh tmp_build/
+    - mkdir release && tar -zcvf release/PyEMSPrototype_Win_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh python37.dll
 
 deploy:
   provider: releases
