@@ -28,7 +28,8 @@ matrix:
     - cp scripts/launch_bash.sh tmp_build/
     - cp /usr/local/Frameworks/Python.framework/Versions/3.6/Python tmp_build/libpython3.6.dylib
     - cp -r /usr/local/Frameworks/Python.framework/Versions/3.6/lib tmp_build/
-    - rm tmp_build/lib/libpython3.6.dylib lib/libpython3.6m.dylib
+    - rm tmp_build/lib/libpython3.6.dylib
+    - rm tmp_build/lib/libpython3.6m.dylib
     - rm -r tmp_build/lib/pkgconfig
     - cp /usr/local/Frameworks/Python.framework/Versions/3.6/Resources/Python.app/Contents/MacOSX/Python tmp_build/python3.6
     - otool -L tmp_build/python3.6
