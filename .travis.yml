@@ -47,6 +47,7 @@ matrix:
     - install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/EnergyPlusPyEMS
     - otool -L tmp_build/EnergyPlusPyEMS
     - mkdir release && tar -zcf release/PyEMSPrototype_Mac_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch_bash.sh lib libpython3.6.dylib python3.6
+    - ./tmp_build/launch_bash.sh
 
   - os: windows
     name: Windows
