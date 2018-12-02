@@ -16,4 +16,4 @@ cp scripts/launch.sh tmp_build/
 
 # create final package
 mkdir release
-tar -zcvf release/PyEMSPrototype_linux_debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh
+tar -zcvf release/PyEMSPrototype_Linux_Debug.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh

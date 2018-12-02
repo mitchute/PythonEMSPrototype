@@ -82,4 +82,5 @@ This was verified by testing the Travis-built-Python-3.6 package on a Mac which 
 
 ## Windows
 
-Haven't gotten here yet.
+On Windows, the only thing we are currently doing is bringing along the python37 DLL file from the installed version.
+Using Dependency Walker, it looks like this depends on core Windows libraries, plus the visual c++ runtime.

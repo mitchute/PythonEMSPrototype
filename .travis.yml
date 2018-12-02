@@ -5,15 +5,11 @@ matrix:
     name: Linux
     sudo: required
     services: docker
-    env: SH="docker exec -t ubuntu-test bash -c"
-    before_install:
-    - docker run -d --name ubuntu-test -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8"
-      -v $(pwd):/travis -w /travis ubuntu:latest tail -f /dev/null
-    install:
-    - $SH "apt-get update"
-    - $SH "apt-get install -y locales && locale-gen en_US.UTF-8"
-    - $SH "apt-get install -y python3.6-dev cmake build-essential"
-    script: $SH "scripts/build_linux_travis.sh"
+    before_script:
+      - docker build --tag pyems_docker_image .
+      - docker run -d --name pyems_docker_container -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8" -v $(pwd):/travis -w /travis pyems_docker_image tail -f /dev/null
+    script:
+      - docker exec -t pyems_docker_container bash -c scripts/build_linux_travis.sh
   - os: osx
     name: Mac
     script: scripts/build_mac_travis.sh
