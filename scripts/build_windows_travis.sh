@@ -22,6 +22,7 @@ cd ..
 mkdir tmp_build
 cp build/Release/EnergyPlusPyEMS.exe tmp_build/
 cp /C/Python37/python37.dll tmp_build/
+cp /C/Python37/python.exe tmp_build/
 cp python_embed/python37.zip tmp_build/
 cp -r my_py_ems tmp_build/
 cp scripts/launch.sh tmp_build/
