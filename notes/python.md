@@ -86,3 +86,5 @@ On Windows, the only thing we are currently doing is bringing along the python37
 Using Dependency Walker, it looks like this depends on core Windows libraries, plus the visual c++ runtime.
 For the final E+ destination, we already grab the visual c++ stuff.
 I guess I could do that here too, but I don't want to end up wasting time...I'll have to think about it.
+
+So much good info here: http://justinwatson.name/2017/03/21/Embedding_Python_in_C++.html
