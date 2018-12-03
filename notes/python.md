@@ -84,3 +84,5 @@ This was verified by testing the Travis-built-Python-3.6 package on a Mac which 
 
 On Windows, the only thing we are currently doing is bringing along the python37 DLL file from the installed version.
 Using Dependency Walker, it looks like this depends on core Windows libraries, plus the visual c++ runtime.
+For the final E+ destination, we already grab the visual c++ stuff.
+I guess I could do that here too, but I don't want to end up wasting time...I'll have to think about it.

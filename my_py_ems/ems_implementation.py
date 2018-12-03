@@ -1,4 +1,6 @@
 # from ems_interface import EMSInterface0
+import json
+
 from special_py_package.special_functions import add
 
 my_variable = 1
@@ -6,6 +8,8 @@ my_variable = 1
 
 def main(data_value):
     global my_variable
+    if my_variable == 1:
+        print(json.dumps({'test': 'importing from std lib json worked'}))
     my_variable = add(my_variable, data_value)
     print("PyEMS : Hit HVACTimeStepLoop, new value of my_variable = " + str(my_variable))
     return 0
