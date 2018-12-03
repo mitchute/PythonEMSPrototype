@@ -20,5 +20,4 @@ cp scripts/launch.sh tmp_build/
 
 # create the final package
 mkdir release
-/C/Program\ Files/7-zip/7z.exe a release/PyEMSPrototype_Win_Release.zip ./tmp_build/*
-tar -zcvf release/PyEMSPrototype_Win.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh python37.dll
+/C/Program\ Files/7-zip/7z.exe a release/PyEMSPrototype_Win.zip ./tmp_build/*
