@@ -31,7 +31,7 @@ matrix:
     script: scripts/build_windows_travis_debug.sh
   - os: windows
     name: Windows Release
-    install: choco install python3
+    install: choco install python3 7zip
     script: scripts/build_windows_travis_release.sh
 deploy:
   provider: releases

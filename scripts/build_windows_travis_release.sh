@@ -9,7 +9,7 @@ cd ..
 
 # test out the built binary
 cp /C/Python37/python37.dll build/Debug
-PYTHONPATH=my_py_ems ./build/Debug/EnergyPlusPyEMS
+PYTHONPATH=my_py_ems ./build/Release/EnergyPlusPyEMS
 
 # prep for packaging
 mkdir tmp_build
