@@ -2,21 +2,37 @@ language: cpp
 matrix:
   include:
   - os: linux
-    name: Linux
+    name: Linux Debug
     sudo: required
     services: docker
     before_script:
       - docker build --tag pyems_docker_image .
       - docker run -d --name pyems_docker_container -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8" -v $(pwd):/travis -w /travis pyems_docker_image tail -f /dev/null
     script:
-      - docker exec -t pyems_docker_container bash -c scripts/build_linux_travis.sh
+      - docker exec -t pyems_docker_container bash -c scripts/build_linux_travis_debug.sh
+  - os: linux
+    name: Linux Release
+    sudo: required
+    services: docker
+    before_script:
+      - docker build --tag pyems_docker_image .
+      - docker run -d --name pyems_docker_container -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8" -v $(pwd):/travis -w /travis pyems_docker_image tail -f /dev/null
+    script:
+      - docker exec -t pyems_docker_container bash -c scripts/build_linux_travis_release.sh
   - os: osx
-    name: Mac
-    script: scripts/build_mac_travis.sh
+    name: Mac Debug
+    script: scripts/build_mac_travis_debug.sh
+  - os: osx
+    name: Mac Release
+    script: scripts/build_mac_travis_release.sh
   - os: windows
-    name: Windows
+    name: Windows Debug
     install: choco install python3
-    script: scripts/build_windows_travis.sh
+    script: scripts/build_windows_travis_debug.sh
+  - os: windows
+    name: Windows Release
+    install: choco install python3
+    script: scripts/build_windows_travis_release.sh
 deploy:
   provider: releases
   skip_cleanup: true

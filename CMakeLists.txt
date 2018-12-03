@@ -5,7 +5,7 @@ project(EnergyPlusPyEMS)
 set(CMAKE_CXX_STANDARD 11)
 
 if(MSVC)
-    # hopefully these hints will help FindPython -- erm -- find ... Python.
+    # hopefully these hints will help FindPython library -- erm -- find ... Python.
     set(PYTHON_LIBRARY "C:/Python37/libs/python37.lib")
     set(PYTHON_INCLUDE_DIR "C:/Python37/include")
 endif()
