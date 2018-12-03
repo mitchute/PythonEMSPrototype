@@ -9,6 +9,7 @@ build
 cmake-build-debug
 release
 tmp_build
+python_embed
 
 # CLion interface
 .idea
