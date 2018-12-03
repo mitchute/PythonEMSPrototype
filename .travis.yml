@@ -1,21 +1,29 @@
 language: cpp
-
-sudo: required
-
-services:
-  - docker
-
-env: SH="docker exec -t ubuntu-test bash -c"
-
-before_install:
-  - docker run -d --name ubuntu-test -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8" -v $(pwd):/travis -w /travis ubuntu:latest tail -f /dev/null
-  - docker ps
-
-install:
- - $SH "apt-get update"
- - $SH "apt-get install -y locales"
- - $SH "locale-gen en_US.UTF-8"
- - $SH "apt-get install -y python3.6-dev cmake build-essential"
-
-script:
- - $SH "mkdir build && cd build && cmake .. && make && cd .. && PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS"
+matrix:
+  include:
+  - os: linux
+    name: Linux Release
+    sudo: required
+    services: docker
+    before_script:
+      - docker build --tag pyems_docker_image .
+      - docker run -d --name pyems_docker_container -e LC_ALL="en_US.UTF-8" -e LANG="en_US.UTF-8" -v $(pwd):/travis -w /travis pyems_docker_image tail -f /dev/null
+    script:
+      - docker exec -t pyems_docker_container bash -c scripts/build_linux_travis.sh
+  - os: osx
+    name: Mac Release
+    script: scripts/build_mac_travis.sh
+  - os: windows
+    name: Windows Release
+    install: choco install python3 7zip
+    script: scripts/build_windows_travis.sh
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: vyIlrPAUJWCx8/jAtRyCBqS5bgWIuVRHyZ6Ka/bAOTTt++ww4J6RZq7fSP8ry0ox7d7EYBlhoaBr3vL3F5r/bpAnCbKimDbO6ESZNiMFO7IYWOm2Gi6IQIEyVskfDvlRI0D5SLjQD3twbq+rJrCOfPqWs9I8LTf1UgzjKKgtRvsFFjKEiOpbQxmioZHQCXoAu8ptxiwpRM/PvBzvRm49vhybA3PjpHEuKbRurLiF9wyEfGMlVRCg9u9EUns87cjtAtFCmAjAwVc+G6jQouRs7kaPxy2pgr9RnVAYXPPq3Z7WeGABkJ7Ggpc+BTHGbQ3x1P5/q//O7knSO55GKSqTtvqhjUXGamjWke5wKYjh9XEF0fso27S4N/7R0GovNO3Gda+T0cHS3oBKCk9J4VY8QsQAqig8BdZrzoWg9qBJVhYlsUE5muvaWOc4SS/83xMmr2e5daf0Dtcnny6KIZwchSzUeVHCYmzcTY0P34ItkyQHS4q6jdVLcS85q3iOvKngvVi1j4B3fCk71RDI7BRL4RvbQSCD/KnxfpschMCIWDors0KpJ2ijK6F0L0Mek2GGP/uMSwZ789CXUuh9X4fTwxKffwARPbYLUzqvrlUZ6EZeIEvS6jKuuj0sa3NNaxU7og+RAnrkrUZZXBd0gpY3nmCRz9brKburG8qcVkmTiHA=
+  file_glob: true
+  file: release/*
+  on:
+    repo: Myoldmopar/PythonEMSPrototype
+    tags: true

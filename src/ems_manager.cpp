@@ -1,14 +1,25 @@
 #include <string>
 #include <vector>
 
+#ifdef _DEBUG
+#undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
 #include <Python.h>
+#endif
 
 #include <ems_manager.h>
 #include <utility.h>
 
 int EMSManager::initPyMSInstances(const char* fileName, const char* functionName, CallingPoints callingPoint) {
     // initialize Python
+    Py_NoSiteFlag = 1;
     Py_Initialize();
+    // Py_SetProgramName(argv[0]);
+    // Py_SetPythonHome('.');
+    // Py_InitializeEx(0);
+
     // load the EMS file
     PyObject *pName = PyUnicode_DecodeFSDefault(fileName);
     /* Error checking of pName left out */
@@ -17,7 +28,7 @@ int EMSManager::initPyMSInstances(const char* fileName, const char* functionName
     thisEMSCall.callingPoint = callingPoint;
     // get a reference to the entire EMS module
     PyObject *pModule = PyImport_Import(pName);
-    Py_DECREF(pName);pName;
+    Py_DECREF(pName);
     if (pModule != NULL) {
         thisEMSCall.pModule = pModule;
         // get a reference to the EMS function
@@ -45,6 +56,7 @@ int EMSManager::closePyEMS(EMSCallingPoint thisCall) {
     if (Py_FinalizeEx() < 0) {
         return 120;
     }
+    return 0;
 }
 
 int EMSManager::callEMSInstance(CallingPoints callingPoint, EMSCallingPoint thisCall)
