@@ -17,7 +17,7 @@ add_executable(EnergyPlusPyEMS
         include/utility.h
         src/utility.cpp
         include/ems_manager.h
-        src/ems_manager.cpp)
+        src/ems_manager.cpp include/simulation.h)
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(include)
 

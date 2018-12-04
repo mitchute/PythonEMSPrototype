@@ -6,13 +6,15 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DTRAVIS=Y ..
 make
 cd ..
-PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS
+echo " **** : Running the tool from the build directory"
+PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS in.idf
 
 # prep for packaging
 mkdir tmp_build
 cp build/EnergyPlusPyEMS tmp_build/
 cp -r my_py_ems tmp_build/
 cp scripts/launch.sh tmp_build/
+cp in.idf tmp_build/
 
 # collect up the Python framework that was used in this build
 cp /usr/local/Frameworks/Python.framework/Versions/3.6/Python tmp_build/libpython3.6.dylib
@@ -37,8 +39,9 @@ install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Vers
 
 # calling this here ensures that the Python prep we did in the tmp_build dir works
 cd tmp_build
+echo " **** : Launching the tool from the packaging directory"
 ./launch.sh
 cd ..
 
 # create the final package
-mkdir release && tar -zcf release/PyEMSPrototype_Mac.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh lib libpython3.6.dylib python3.6
+mkdir release && tar -zcf release/PyEMSPrototype_Mac.tar.gz -C tmp_build my_py_ems EnergyPlusPyEMS launch.sh lib libpython3.6.dylib python3.6 in.idf

@@ -3,6 +3,6 @@
 
 #include <string>
 
-void print_cpp(std::string message);
+void printCpp(std::string message);
 
 #endif //ENERGYPLUSPYEMS_UTILITY_H

@@ -1,2 +1,3 @@
-def add(x, y):
-    return x + y
+
+def py_print(msg):
+    print("PyEMS : " + msg)

@@ -3,6 +3,6 @@
 
 #include <utility.h>
 
-void print_cpp(std::string message) {
+void printCpp(std::string message) {
     std::cout << " C++  : " << message << std::endl;
 }

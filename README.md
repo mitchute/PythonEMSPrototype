@@ -6,8 +6,12 @@ This is a little standalone sandbox where we can evaluate the design of the new 
 
 ## Questions to answer with this repo
 
- - [ ] What version of Python will we use?
- - [ ] How is Python Packaged?
+ - [X] What version of Python will we use?
+   - The plan is to get all platforms using Python 3.6
+ - [X] How is Python Packaged?
+   - On Ubuntu 18.04, we are currently using the system installed Python 3.6
+   - On Windows we are packaging an isolated Python 3.7 environment with a compressed standard library (issue #14)
+   - On Mac we are packaging an isolated Python 3.6 environment with an uncompressed standard library
  - [ ] What does the Python API look like?
  - [ ] Will I write functions or classes?
  - [ ] Can I have more than one EMS file?
@@ -17,14 +21,12 @@ This is a little standalone sandbox where we can evaluate the design of the new 
 
 ## Developer Environment
 
-I have tested it on Ubuntu 18.04, but it should be very close to functional on all the platforms.
 Setting up a dev environment is really simple; you only need three things:
 
  - Python (currently targeting 3.6)
- - A C++ compiler (currently using g++)
- - CMake (to build the makefile structure -- I guess technically it's optional if you're a crazy person)
+ - A C++ compiler (currently using g++ on Linux, Clang on Mac, and MSVC on Windows)
+ - CMake
 
-## Python Packaging
+## Python
 
-Setting this up on Mac was, um, difficult.
-But this helped _so_ much: http://joaoventura.net/blog/2016/embeddable-python-osx/
+Tons of notes about Python interactions, packaging, etc., can be found in the [Python notes file](notes/python.md).
