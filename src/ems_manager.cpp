@@ -40,23 +40,23 @@ int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string c
     PyObject *pModuleDict = PyModule_GetDict(pModule);
     Py_DECREF(pModule);
     if (!pModuleDict) {
-        printCpp("Failed to read module dictionary");
+        printCpp("Failed to read module dictionary from module \"" + moduleName + "\"");
         return 1;
     }
     PyObject *pClass = PyDict_GetItemString(pModuleDict, className.c_str());
     Py_DECREF(pModuleDict);
     if (!pClass) {
-        printCpp("Failed to get class type from module dictionary");
+        printCpp("Failed to get class type \"" + className + "\" from module \"" + moduleName + "\"");
         return 1;
     }
     if (!PyCallable_Check(pClass)) {
-        printCpp("Got class type, but it cannot be called/instantiated");
+        printCpp("Got class type \"" + className + "\", but it cannot be called/instantiated");
         return 1;
     }
     PyObject *pClassInstance = PyObject_CallObject(pClass, NULL);
     Py_DECREF(pClass);
     if (!pClassInstance) {
-        printCpp("Something went awry calling class constructor");
+        printCpp("Something went awry calling class constructor for class \"" + className + "\"");
         return 1;
     }
     // the only thing that we haven't Py_DECREF'd in the above block is pClassInstance since we need it below
@@ -257,4 +257,16 @@ int EMSManager::callEMSInstances(CallingPoint callingPoint, SensedVariables &sen
         Py_DECREF(pFunctionResponse);
     }
     return 0;  // wait til we're all done
+}
+
+int EMSManager::addToPythonPath(std::string path) {
+    std::string command = "sys.path.insert(0, \"" + path + "\")";
+    if (PyRun_SimpleString(command.c_str()) == 0) {
+        printCpp("Successfully added path \"" + path + "\" to the sys.path in Python");
+        PyRun_SimpleString("print(sys.path)");
+        return 0;
+    } else {
+        printCpp("ERROR adding \"" + path + "\" to the sys.path in Python");
+        return 1;
+    }
 }

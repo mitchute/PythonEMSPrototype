@@ -1,0 +1,3 @@
+dir,example/my_example_python_ems
+class,py_ems_implementation,MyEMSInterfaceAfterSizing
+class,py_ems_implementation,MyEMSInterfaceInsideTimeStep

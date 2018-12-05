@@ -10,6 +10,7 @@ cmake-build-debug
 release
 tmp_build
 python_embed
+docs/_build
 
 # CLion interface
 .idea

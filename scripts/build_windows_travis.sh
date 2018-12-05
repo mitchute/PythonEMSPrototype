@@ -10,7 +10,7 @@ cd ..
 # test out the built binary
 cp /C/Python37/python37.dll build/Release
 echo " **** : Running the tool from the build directory"
-PYTHONPATH=my_py_ems ./build/Release/EnergyPlusPyEMS in.idf
+./build/Release/EnergyPlusPyEMS example/in.idf
 
 # grab and extract the embeddable python to get a zip copy of the standard library
 mkdir python_embed
@@ -25,9 +25,8 @@ cp build/Release/EnergyPlusPyEMS.exe tmp_build/
 cp /C/Python37/python37.dll tmp_build/
 cp /C/Python37/python.exe tmp_build/
 cp python_embed/python37.zip tmp_build/
-cp -r my_py_ems tmp_build/
-cp scripts/launch.sh tmp_build/
-cp in.idf tmp_build/
+cp -r example tmp_build/
+cp -r pyms/pyms tmp_build/
 
 # create the final package
 mkdir release

@@ -45,6 +45,7 @@ public:
         // from https://docs.python.org/3/c-api/init.html
         // If arg 0, it skips init registration of signal handlers, which might be useful when Python is embedded.
         Py_InitializeEx(0);
+        PyRun_SimpleString("import sys");
         printCpp("Inside EMSManager constructor, completed call to initialize");
     }
     ~EMSManager() {
@@ -52,6 +53,7 @@ public:
         Py_FinalizeEx();
         printCpp("Inside EMSManager destructor, completed call to finalize");
     }
+    int addToPythonPath(std::string path);
     int initPyEMSInstanceFromClass(std::string fileName, std::string functionName);
     int callEMSInstances(CallingPoint callingPoint, SensedVariables &sensors, ActuatedVariables &actuators);
 };

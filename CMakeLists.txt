@@ -17,7 +17,10 @@ add_executable(EnergyPlusPyEMS
         include/utility.h
         src/utility.cpp
         include/ems_manager.h
-        src/ems_manager.cpp include/simulation.h)
+        src/ems_manager.cpp
+        include/simulation.h
+        src/file_system.cpp
+        include/file_system.h)
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(include)
 
@@ -41,3 +44,11 @@ else()
     # I do _not_ know if this will work, but whatever
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_LIBRARIES}")
 endif()
+
+# this brings in just the python package subdirectory of the pyms submodule
+add_custom_command(
+    TARGET EnergyPlusPyEMS
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/pyms/pyms $<TARGET_FILE_DIR:EnergyPlusPyEMS>/pyms
+    COMMENT "Copying PyMS directory to build folder"
+)

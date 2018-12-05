@@ -1,6 +1,7 @@
 # PythonEMSPrototype
 
 [![Build Status](https://travis-ci.org/Myoldmopar/PythonEMSPrototype.svg?branch=master)](https://travis-ci.org/Myoldmopar/PythonEMSPrototype)
+[![Documentation Status](https://readthedocs.org/projects/energyplus-pyms/badge/?version=latest)](https://energyplus-pyms.readthedocs.io/en/latest/?badge=latest)
 
 This is a little standalone sandbox where we can evaluate the design of the new Python-EMS implementation.
 
@@ -43,6 +44,14 @@ Setting up a dev environment is really simple; you only need three things:
  - A C++ compiler (currently using g++ on Linux, Clang on Mac, and MSVC on Windows)
  - CMake
 
-## Python
+## Documentation
 
-Tons of notes about Python interactions, packaging, etc., can be found in the [Python notes file](notes/python.md).
+Documentation is built from Sphinx on [ReadTheDocs](https://energyplus-pyms.readthedocs.io/en/latest/?badge=latest), and
+covers several aspects of the project, including:
+
+ - A brief history, with justification for the project
+ - An overview of the structure of the prototype program and how it works
+ - A detailed discussion of how Python is prepared and packaged with the prototype (it will be similar for E+)
+ - Example workflows for users of the program
+
+

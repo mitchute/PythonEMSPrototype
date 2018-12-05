@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <ems_manager.h>
+#include <file_system.h>
 #include <utility.h>
 
 int
@@ -13,7 +14,25 @@ main(int argc, char *argv[])
     printCpp("Starting (Fake) EnergyPlus");
     EMSManager eplusEmsManager;
 
-    // read input file, add new PyEMS for each line found: lines should be `module,class_name'
+    // we need to figure out the right way to find the path to the binary itself
+    // we want to point Python to a folder containing a pyms folder in it
+    // for the case of this prototype, it's the root of the repo
+    // for the case of an E+ distribution, it will be probably the root of the E+ install
+    // I think this is already available from the command line interface work
+    eplusEmsManager.addToPythonPath(".");
+
+    // so I think we'll want to add to the front of path, in this order:
+    // - the program executable parent directory, so that it could find the installed pyms,
+    // - the current working directory, so if they have pyms installed locally it will find that one first
+    // - any additional paths they ask for in the input file
+    std::string programPath = getProgramPath();
+    std::string programDir = getParentDirectoryPath(programPath);
+    printCpp("Getting program path: " + programPath);
+    printCpp("Getting program dir: " + programDir);
+    std::string sanitizedDir = sanitizedPath(programDir);
+    eplusEmsManager.addToPythonPath(sanitizedDir);
+
+    // read input file
     if (argc != 2) {
         std::cout << "Should call this with a single argument: the path to the (fake) idf file\n";
         return 1;
@@ -22,10 +41,32 @@ main(int argc, char *argv[])
     if (file.is_open()) {
         std::string line;
         while (getline(file, line)) {
-            std::string moduleName = line.substr(0, line.find(","));
-            std::string className = line.substr(line.find(",") + 1, line.length());
-            if (eplusEmsManager.initPyEMSInstanceFromClass(moduleName, className) != 0) {
+            if (line.substr(0, 1) == "!") {
+                continue;
+            }
+            std::string remainingLine = line;
+            // find the input type (dir or class) token
+            size_t comma_position = remainingLine.find(",");
+            if (comma_position == std::string::npos) {
+                printCpp("Bad line in input file, could not find first comma");
                 return 1;
+            }
+            std::string objectType = remainingLine.substr(0, comma_position);
+            remainingLine = remainingLine.substr(comma_position + 1, remainingLine.length());
+            // then process the rest of the line based on this first token
+            if (objectType == "dir") {
+                // need to parse the python dir and add it to the search path
+                std::string searchDir = remainingLine;
+                sanitizedDir = sanitizedPath(searchDir);
+                if (eplusEmsManager.addToPythonPath(sanitizedDir) != 0) {
+                    return 1;
+                }
+            } else if (objectType == "class") {
+                std::string moduleName = remainingLine.substr(0, remainingLine.find(","));
+                std::string className = remainingLine.substr(remainingLine.find(",") + 1, remainingLine.length());
+                if (eplusEmsManager.initPyEMSInstanceFromClass(moduleName, className) != 0) {
+                    return 1;
+                }
             }
         }
         file.close();
