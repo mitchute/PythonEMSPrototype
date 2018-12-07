@@ -1,7 +1,7 @@
-EnergyPlus Python Plugin Interface
-==================================
+EnergyPlus Plugin Interface
+===========================
 
-This package contains the interface used by EnergyPlus when doing EnergyPlus Python Plugin System calls.
+This package contains the interface used by EnergyPlus when doing EnergyPlus Plugin calls.
 This package also contains a test script that can be used to verify proper script construction.
 
 Purpose

@@ -18,15 +18,15 @@
 #include <simulation.h>
 #include <utility.h>
 
-std::string const mainFunctionName = "ems_main";
+std::string const mainFunctionName = "main";
 std::string const callingPointFunctionName = "get_calling_point";
 std::string const getSensorsFunctionName = "get_sensed_data_list";
 std::string const getActuatorsFunctionName = "get_actuator_list";
 std::string const updateSensorFunctionName = "update_sensed_datum";
 
-int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string className) {
+int PluginManager::initPluginInstanceFromClass(std::string moduleName, std::string className) {
 
-    PyEMSInstance thisEMSCall;
+    PluginInstance thisPlugin;
 
     // this first section is really all about just ultimately getting a full Python class instance
     // this answer helped with a few things: https://ru.stackoverflow.com/a/785927
@@ -62,40 +62,40 @@ int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string c
     // the only thing that we haven't Py_DECREF'd in the above block is pClassInstance since we need it below
 
     // now grab the function pointers to each of the relevant functions
-    PyObject *pEMSMainFunction = PyObject_GetAttrString(pClassInstance, mainFunctionName.c_str());
-    if (!pEMSMainFunction || !PyCallable_Check(pEMSMainFunction)) {
+    PyObject *pPluginMainFunction = PyObject_GetAttrString(pClassInstance, mainFunctionName.c_str());
+    if (!pPluginMainFunction || !PyCallable_Check(pPluginMainFunction)) {
         if (PyErr_Occurred()) {
             PyErr_Print();
         }
         printCpp("Could not find function \"" + mainFunctionName + "\" on class \"" + moduleName + "." + className + "\"");
         return 1;
     }
-    PyObject *pEMSGetSensorsFunction = PyObject_GetAttrString(pClassInstance, getSensorsFunctionName.c_str());
-    if (!pEMSGetSensorsFunction || !PyCallable_Check(pEMSGetSensorsFunction)) {
+    PyObject *pPluginGetSensorsFunction = PyObject_GetAttrString(pClassInstance, getSensorsFunctionName.c_str());
+    if (!pPluginGetSensorsFunction || !PyCallable_Check(pPluginGetSensorsFunction)) {
         if (PyErr_Occurred()) {
             PyErr_Print();
         }
         printCpp("Could not find function \"" + getSensorsFunctionName + "\" on class \"" + moduleName + "." + className + "\"");
         return 1;
     }
-    PyObject *pEMSUpdateSensorFunction = PyObject_GetAttrString(pClassInstance, updateSensorFunctionName.c_str());
-    if (!pEMSUpdateSensorFunction || !PyCallable_Check(pEMSUpdateSensorFunction)) {
+    PyObject *pPluginUpdateSensorFunction = PyObject_GetAttrString(pClassInstance, updateSensorFunctionName.c_str());
+    if (!pPluginUpdateSensorFunction || !PyCallable_Check(pPluginUpdateSensorFunction)) {
         if (PyErr_Occurred()) {
             PyErr_Print();
         }
         printCpp("Could not find function \"" + updateSensorFunctionName + "\" on class \"" + moduleName + "." + className + "\"");
         return 1;
     }
-    PyObject *pEMSCallingPointFunction = PyObject_GetAttrString(pClassInstance, callingPointFunctionName.c_str());
-    if (!pEMSCallingPointFunction || !PyCallable_Check(pEMSCallingPointFunction)) {
+    PyObject *pPluginCallingPointFunction = PyObject_GetAttrString(pClassInstance, callingPointFunctionName.c_str());
+    if (!pPluginCallingPointFunction || !PyCallable_Check(pPluginCallingPointFunction)) {
         if (PyErr_Occurred()) {
             PyErr_Print();
         }
         printCpp("Could not find function \"" + callingPointFunctionName + "\" on class \"" + moduleName + "." + className + "\"");
         return 1;
     }
-    PyObject *pEMSGetActuatorsFunction = PyObject_GetAttrString(pClassInstance, getActuatorsFunctionName.c_str());
-    if (!pEMSGetActuatorsFunction || !PyCallable_Check(pEMSGetActuatorsFunction)) {
+    PyObject *pPluginGetActuatorsFunction = PyObject_GetAttrString(pClassInstance, getActuatorsFunctionName.c_str());
+    if (!pPluginGetActuatorsFunction || !PyCallable_Check(pPluginGetActuatorsFunction)) {
         if (PyErr_Occurred()) {
             PyErr_Print();
         }
@@ -103,8 +103,8 @@ int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string c
         return 1;
     }
 
-    // we will call to get the calling point for this EMS class, then we're done with that function
-    PyObject *pCallingPointResponse = PyObject_CallFunction(pEMSCallingPointFunction, NULL);
+    // we will call to get the calling point for this EPS class, then we're done with that function
+    PyObject *pCallingPointResponse = PyObject_CallFunction(pPluginCallingPointFunction, NULL);
     if (!pCallingPointResponse) {
         printCpp("Could not call get_calling_point function on class \"" + moduleName + "." + className + ", make sure it is defined and error free");
         return 1;
@@ -115,13 +115,13 @@ int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string c
         return 1;
     }
     CallingPoint thisCallingPoint = (CallingPoint) callingPointInt;
-    Py_DECREF(pEMSCallingPointFunction);
+    Py_DECREF(pPluginCallingPointFunction);
     Py_DECREF(pCallingPointResponse);
 
     // we also call to get the list of sensors, then we're done with that function
-    PyObject *pGetSensorsResponse = PyObject_CallFunction(pEMSGetSensorsFunction, NULL);
+    PyObject *pGetSensorsResponse = PyObject_CallFunction(pPluginGetSensorsFunction, NULL);
     if (!pGetSensorsResponse) {
-        printCpp("Could not call get_sensed_data_list function on EMS derived class, make sure it is defined and error free");
+        printCpp("Could not call get_sensed_data_list function on EPS derived class, make sure it is defined and error free");
         return 1;
     }
     if (PyList_Check(pGetSensorsResponse)) {
@@ -139,11 +139,11 @@ int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string c
                 printCpp("Invalid string return value from \"" + moduleName + "." + className + "." + getSensorsFunctionName + "; item #" + std::to_string(i));
                 return 1;
             }
-            thisEMSCall.sensorIDs.push_back(thisString);
+            thisPlugin.sensorIDs.push_back(thisString);
             // calling the update_sensor function - it will verify functionality and also initialize the dict
-            PyObject *pUpdateFunctionResponse = PyObject_CallFunction(pEMSUpdateSensorFunction, "(sd)", thisString.c_str(), 0.0);
+            PyObject *pUpdateFunctionResponse = PyObject_CallFunction(pPluginUpdateSensorFunction, "(sd)", thisString.c_str(), 0.0);
             if (!pUpdateFunctionResponse) {
-                printCpp("Could not call to update sensor data function, this is a base class function so either it's improperly overridden or EMS class does not inherit EMS base");
+                printCpp("Could not call to update sensor data function, this is a base class function so either it's improperly overridden or EPS class does not inherit EnergyPlusPlugin base class");
                 return 1;
             }
             Py_DECREF(next);
@@ -153,13 +153,13 @@ int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string c
         printCpp("Invalid return from get_sensed_data_list on class \"" + moduleName + "." + className + ", make sure it returns a list of strings");
         return 1;
     }
-    Py_DECREF(pEMSGetSensorsFunction);
+    Py_DECREF(pPluginGetSensorsFunction);
     Py_DECREF(pGetSensorsResponse);
 
     // finally we also call to get the list of actuators, and we're done with that function also
-    PyObject *pGetActuatorsResponse = PyObject_CallFunction(pEMSGetActuatorsFunction, NULL);
+    PyObject *pGetActuatorsResponse = PyObject_CallFunction(pPluginGetActuatorsFunction, NULL);
     if (!pGetActuatorsResponse) {
-        printCpp("Could not call get_actuator_list function on EMS derived class, make sure it is defined and error free");
+        printCpp("Could not call get_actuator_list function on EPS derived class, make sure it is defined and error free");
         return 1;
     }
     if (PyList_Check(pGetActuatorsResponse)) {
@@ -175,30 +175,31 @@ int EMSManager::initPyEMSInstanceFromClass(std::string moduleName, std::string c
                 return 1;
             }
             // check thisString for NULL due to bad response from the Python function
-            thisEMSCall.actuatorIDs.push_back(thisString);
+            thisPlugin.actuatorIDs.push_back(thisString);
             Py_DECREF(next);
         }
     } else {
         printCpp("Invalid return from get_actuator_list on class \"" + moduleName + "." + className + ", make sure it returns a list of strings");
         return 1;
     }
-    Py_DECREF(pEMSGetActuatorsFunction);
+    Py_DECREF(pPluginGetActuatorsFunction);
     Py_DECREF(pGetActuatorsResponse);
 
-    // update the rest of the EMS call instance and store it
-    thisEMSCall.stringIdentifier = moduleName + "." + className;
-    thisEMSCall.pEMSMainFunction = pEMSMainFunction;
-    thisEMSCall.pEMSUpdateSensorFunction = pEMSUpdateSensorFunction;
-    thisEMSCall.callingPoint = thisCallingPoint;
-    pyEMSInstances.push_back(thisEMSCall);
+    // update the rest of the plugin call instance and store it
+    thisPlugin.stringIdentifier = moduleName + "." + className;
+    thisPlugin.pPluginMainFunction = pPluginMainFunction;
+    thisPlugin.pPluginUpdateSensorFunction = pPluginUpdateSensorFunction;
+    thisPlugin.callingPoint = thisCallingPoint;
+    pluginInstances.push_back(thisPlugin);
 
     // hooray!
     return 0;
 }
 
-int EMSManager::callEMSInstances(CallingPoint callingPoint, SensedVariables &sensors, ActuatedVariables &actuators)
+int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariables &sensors,
+                                       ActuatedVariables &actuators)
 {
-    for (auto & thisCall : this->pyEMSInstances) {
+    for (auto & thisCall : this->pluginInstances) {
         if (thisCall.callingPoint != callingPoint) {
             // TODO: store the instances by type so we don't have to loop here each time
             continue;
@@ -216,7 +217,7 @@ int EMSManager::callEMSInstances(CallingPoint callingPoint, SensedVariables &sen
                 printCpp("Bad sensor value entered, did not find it available for this simulation: \"" + sensorId + "\"");
                 return 1;
             }
-            PyObject *pUpdateFunctionResponse = PyObject_CallFunction(thisCall.pEMSUpdateSensorFunction, "(sd)", sensorId.c_str(), valueToPass);
+            PyObject *pUpdateFunctionResponse = PyObject_CallFunction(thisCall.pPluginUpdateSensorFunction, "(sd)", sensorId.c_str(), valueToPass);
             if (!pUpdateFunctionResponse) {
                 printCpp("Could not call to update sensor; sensor name = \"" + sensorId + "\", class = \"" + thisCall.stringIdentifier + "\"");
                 return 1;
@@ -224,7 +225,7 @@ int EMSManager::callEMSInstances(CallingPoint callingPoint, SensedVariables &sen
             Py_DECREF(pUpdateFunctionResponse);
         }
         // then call the main function
-        PyObject *pFunctionResponse = PyObject_CallFunction(thisCall.pEMSMainFunction, NULL);
+        PyObject *pFunctionResponse = PyObject_CallFunction(thisCall.pPluginMainFunction, NULL);
         if (!pFunctionResponse) {
             PyErr_Print();
             printCpp("Call to " + thisCall.stringIdentifier + " failed!");
@@ -251,7 +252,7 @@ int EMSManager::callEMSInstances(CallingPoint callingPoint, SensedVariables &sen
                 Py_DECREF(next);
             }
         } else {
-            printCpp("Invalid return from ems_main on class \"" + thisCall.stringIdentifier + ", make sure it returns a list of actuated float values");
+            printCpp("Invalid return from main() on class \"" + thisCall.stringIdentifier + ", make sure it returns a list of actuated float values");
             return 1;
         }
         Py_DECREF(pFunctionResponse);
@@ -259,7 +260,7 @@ int EMSManager::callEMSInstances(CallingPoint callingPoint, SensedVariables &sen
     return 0;  // wait til we're all done
 }
 
-int EMSManager::addToPythonPath(std::string path) {
+int PluginManager::addToPythonPath(std::string path) {
     std::string command = "sys.path.insert(0, \"" + path + "\")";
     if (PyRun_SimpleString(command.c_str()) == 0) {
         printCpp("Successfully added path \"" + path + "\" to the sys.path in Python");

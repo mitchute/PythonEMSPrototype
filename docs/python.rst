@@ -9,7 +9,7 @@ dependencies. Each platform requires a bit different treatment.
 Linux (Ubuntu 18.04)
 --------------------
 
-The main PyEMS binary is built on Travis inside an 18.04 Docker image.
+The main "Fake EnergyPlus" binary is built on Travis inside an 18.04 Docker image.
 At the time of the writing has a list of 12 shared object dependencies.
 Each has been investigated to determine whether it is something we need
 to collect for binary distribution or not. Here are the results:
@@ -83,12 +83,12 @@ to collect for binary distribution or not. Here are the results:
 
 Ultimately, the only one we really care about is the libpython3.6
 library. My current feeling is that we don't worry about including our
-own version. This has the advantage of ensuring that the EMS dev can use
+own version. This has the advantage of ensuring that the plugin dev can use
 system-native dependencies by installing them using system apt python
-packages. When you report the sys.path from the EMS code, you get the
+packages. When you report the sys.path from the plugin code, you get the
 paths: ['my\_py\_ems', '/usr/lib/python36.zip', '/usr/lib/python3.6',
 '/usr/lib/python3.6', '/usr/lib/python3.6/lib-dynload'] So the dev can
-drop their own libraries into my\_py\_ems, and also utilize
+drop their own libraries into a folder they choose, and also utilize
 system-installed libraries, side-by-side. We'll need to evaluate how
 this jives with other platforms as we tidy all this up, but for now we
 will rely on the Ubuntu supplied Python lib, and not package one
@@ -160,7 +160,7 @@ package on a Mac which only contained Python 3.7.
 
    -  install\_name\_tool -change
       /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python
-      @executable\_path/libpython3.6.dylib tmp\_build/EnergyPlusPyEMS
+      @executable\_path/libpython3.6.dylib tmp\_build/FakeEnergyPlus
 
 -  And if we are including the interpreter, we need to do the same for
    it:

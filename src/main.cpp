@@ -10,16 +10,16 @@
 int
 main(int argc, char *argv[])
 {
-    // start up E+ and create an EMS manager to store instances, etc.
+    // start up E+ and create a plugin manager to store instances, etc.
     printCpp("Starting (Fake) EnergyPlus");
-    EMSManager eplusEmsManager;
+    PluginManager eplusPluginManager;
 
     // we need to figure out the right way to find the path to the binary itself
     // we want to point Python to a folder containing a pyms folder in it
     // for the case of this prototype, it's the root of the repo
     // for the case of an E+ distribution, it will be probably the root of the E+ install
     // I think this is already available from the command line interface work
-    eplusEmsManager.addToPythonPath(".");
+    eplusPluginManager.addToPythonPath(".");
 
     // so I think we'll want to add to the front of path, in this order:
     // - the program executable parent directory, so that it could find the installed pyms,
@@ -30,7 +30,7 @@ main(int argc, char *argv[])
     printCpp("Getting program path: " + programPath);
     printCpp("Getting program dir: " + programDir);
     std::string sanitizedDir = sanitizedPath(programDir);
-    eplusEmsManager.addToPythonPath(sanitizedDir);
+    eplusPluginManager.addToPythonPath(sanitizedDir);
 
     // read input file
     if (argc != 2) {
@@ -58,13 +58,13 @@ main(int argc, char *argv[])
                 // need to parse the python dir and add it to the search path
                 std::string searchDir = remainingLine;
                 sanitizedDir = sanitizedPath(searchDir);
-                if (eplusEmsManager.addToPythonPath(sanitizedDir) != 0) {
+                if (eplusPluginManager.addToPythonPath(sanitizedDir) != 0) {
                     return 1;
                 }
             } else if (objectType == "class") {
                 std::string moduleName = remainingLine.substr(0, remainingLine.find(","));
                 std::string className = remainingLine.substr(remainingLine.find(",") + 1, remainingLine.length());
-                if (eplusEmsManager.initPyEMSInstanceFromClass(moduleName, className) != 0) {
+                if (eplusPluginManager.initPluginInstanceFromClass(moduleName, className) != 0) {
                     return 1;
                 }
             }
@@ -80,19 +80,19 @@ main(int argc, char *argv[])
     ActuatedVariables actuatedData;
     printCpp("Performing Sizing");
     sensedData.initialCoilSize = 1108.73;
-    if (eplusEmsManager.callEMSInstances(CallingPoint::AFTER_SIZING, sensedData, actuatedData) != 0) return 1;
+    if (eplusPluginManager.callPluginInstances(CallingPoint::AFTER_SIZING, sensedData, actuatedData) != 0) return 1;
     printCpp("Inside HVAC TimeStep Loop");
     sensedData.zoneOneTemperature = 23.4;
     sensedData.zoneTwoTemperature = 24.3;
-    if (eplusEmsManager.callEMSInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
+    if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
     printCpp("Inside HVAC TimeStep Loop");
     sensedData.zoneOneTemperature = 22.4;
     sensedData.zoneTwoTemperature = 25.3;
-    if (eplusEmsManager.callEMSInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
+    if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
     printCpp("Inside HVAC TimeStep Loop");
     sensedData.zoneOneTemperature = 20.6;
     sensedData.zoneTwoTemperature = 27.3;
-    if (eplusEmsManager.callEMSInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
+    if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
     printCpp("Timesteps Complete");
     printCpp("EnergyPlus Complete");
 }

@@ -8,7 +8,7 @@ predetermined set of control strategies.
 
 In 2006, a custom runtime language was added to the EnergyPlus input syntax, with a custom built parser and interpreter.
 This system is called EnergyPlus Energy Management System, or EMS for short, with the language being the EnergyPlus
-Runtime Language, or Erl for short.  This system could be used by program users who wanted to customize control
+Runtime Language, or Erl for short.  This system could be leveraged by program users who wanted to customize control
 strategies or override some aspects of the program.  The code could "sense" conditions of the simulation and
 "actuate" output variables.
 
@@ -16,16 +16,28 @@ Over time, the implementation extended to allowing users to create their own cus
 invoked to calculate physical responses of components to various inlet conditions, environmental conditions, and
 simulation status such as time of day.  In conjunction with this extension, the bulkiness of a built-in interpretive
 language began revealing itself.  Debugging large programs became increasingly difficult for users, and managing a
-"library" of EMS was very difficult.
+"library" of EMS was very difficult.  The breadth of capability with EMS has also outgrown the original name, as it is
+no longer just an energy management system, but basically a plugin system for affecting the simulation with custom code.
 
-This new implementation of EMS in Python will address many of the issues users see with the current Erl-based EMS
-system.  To avoid ambiguity, the new implementation will, for now, be referred to as EnergyPlus PyMS.  The key
-requirements of the new system include:
+A new system has now been developed, called the EnergyPlus Plugin System (or EPS for short).  This builds on the ideas
+of EMS, but now allows users to write plugin code using the Python language, instead of the built-in runtime language.
+This unlocks an incredible amount of possibilities, as now the user can write code that does pretty much anything Python
+can do:
 
-* Users must be able to write Python functions that can be callable from inside EnergyPlus
-* PyMS functions must have access to sensors in EnergyPlus, and must be able to actuate exposed components in EnergyPlus
-* Users do not need to have any version of Python installed (unless it is a core (required) asset in the operating system)
-* The placement of PyMS script files should be flexible, with little limitation on how the user organizes their files
-* PyMS should allow the user to build up a library of scripts and functionality, with multiple classes per file, etc.
-* Users should be able to add other libraries to be importable at runtime with the single caveat that libraries
-  that use native code will not be explicitly supported, but may still be functional
+* Typical mathematical operations
+* File I/O for accessing data on a system
+* Web queries
+* Hardware queries
+
+This implementation of the plugin system in Python will address many of the issues users see with the current Erl-based
+EMS system.  The key facets of the new system include:
+
+* Users write Python functions that are callable from inside EnergyPlus
+* Plugin functions have access to sensors in EnergyPlus, and are able to actuate exposed components in EnergyPlus
+* Users on Windows and Mac do not need to have any version of Python installed
+* On Ubuntu (18.04), the current approach is to use the built-in system Python3, as it is there by default
+* The placement of plugin script files is flexible, allowing users to keep small scripts hanging, or develop entire
+  Python packages of plugin scripts, with multiple classes per file, external library calls, etc.
+* Currently, we are resolving the issues around adding extra libraries to the plugin system.  It is expected that adding
+  pure Python libraries will be a very simple thing, and that using libraries with native code dependency will not be
+  such a simple thing.

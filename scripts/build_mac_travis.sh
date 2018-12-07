@@ -7,13 +7,13 @@ cmake -DCMAKE_BUILD_TYPE=Release -DTRAVIS=Y ..
 make
 cd ..
 echo " **** : Running the tool from the build directory"
-PYTHONPATH=my_py_ems ./build/EnergyPlusPyEMS example/in.idf
+./build/FakeEnergyPlus example/in.idf
 
 # prep for packaging
 mkdir tmp_build
-cp build/EnergyPlusPyEMS tmp_build/
+cp build/FakeEnergyPlus tmp_build/
 cp -r example tmp_build/
-cp -r pyms/pyms tmp_build/
+cp -r plugin_interface/energyplus_plugin tmp_build/
 
 # collect up the Python framework that was used in this build
 cp /usr/local/Frameworks/Python.framework/Versions/3.6/Python tmp_build/libpython3.6.dylib
@@ -34,13 +34,13 @@ install_name_tool -id @executable_path/libpython3.6.dylib tmp_build/libpython3.6
 # otool -L tmp_build/python3.6 - Diagnostic
 install_name_tool -change /usr/local/Cellar/python/3.6.5_1/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/python3.6
 # otool -L tmp_build/python3.6 - Diagnostic
-install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/EnergyPlusPyEMS
+install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Versions/3.6/Python @executable_path/libpython3.6.dylib tmp_build/FakeEnergyPlus
 
 # calling this here ensures that the Python prep we did in the tmp_build dir works
 cd tmp_build
 echo " **** : Launching the tool from the packaging directory"
-./EnergyPlusPyEMS example/in.idf
+./FakeEnergyPlus example/in.idf
 cd ..
 
 # create the final package
-mkdir release && tar -zcf release/PyEMSPrototype_Mac.tar.gz -C tmp_build example pyms EnergyPlusPyEMS lib libpython3.6.dylib python3.6
+mkdir release && tar -zcf release/FakeEnergyPlusWithEPS_Mac.tar.gz -C tmp_build example energyplus_plugin FakeEnergyPlus lib libpython3.6.dylib python3.6
