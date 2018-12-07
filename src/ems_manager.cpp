@@ -30,21 +30,25 @@ int PluginManager::initPluginInstanceFromClass(std::string moduleName, std::stri
 
     // this first section is really all about just ultimately getting a full Python class instance
     // this answer helped with a few things: https://ru.stackoverflow.com/a/785927
+
     PyObject *pModuleName = PyUnicode_DecodeFSDefault(moduleName.c_str());
     PyObject *pModule = PyImport_Import(pModuleName);
+    // PyUnicode_DecodeFSDefault documentation does not explicitly say whether it returns a new or borrowed reference,
+    // but other functions in that section say they return a new reference, and that makes sense to me, so I think we
+    // should decrement it.
     Py_DECREF(pModuleName);
     if (!pModule) {
         printCpp("Failed to import module \"" + moduleName + "\"");
         return 1;
     }
     PyObject *pModuleDict = PyModule_GetDict(pModule);
-    Py_DECREF(pModule);
+    Py_DECREF(pModule);  // PyImport_Import returns a new reference, decrement it
     if (!pModuleDict) {
         printCpp("Failed to read module dictionary from module \"" + moduleName + "\"");
         return 1;
     }
     PyObject *pClass = PyDict_GetItemString(pModuleDict, className.c_str());
-    Py_DECREF(pModuleDict);
+    // Py_DECREF(pModuleDict);  // PyModule_GetDict returns a borrowed reference, DO NOT decrement
     if (!pClass) {
         printCpp("Failed to get class type \"" + className + "\" from module \"" + moduleName + "\"");
         return 1;
@@ -54,12 +58,15 @@ int PluginManager::initPluginInstanceFromClass(std::string moduleName, std::stri
         return 1;
     }
     PyObject *pClassInstance = PyObject_CallObject(pClass, NULL);
-    Py_DECREF(pClass);
+    // Py_DECREF(pClass);  // PyDict_GetItemString returns a borrowed reference, DO NOT decrement
     if (!pClassInstance) {
         printCpp("Something went awry calling class constructor for class \"" + className + "\"");
         return 1;
     }
-    // the only thing that we haven't Py_DECREF'd in the above block is pClassInstance since we need it below
+    // PyObject_CallObject returns a new reference, that we need to manage
+    // I think we need to keep it around in memory though so the class methods can be called later on,
+    // so I don't intend on decrementing it, at least not until the manager destructor
+    // In any case, it will be an **extremely** tiny memory use if we hold onto it a bit too long
 
     // now grab the function pointers to each of the relevant functions
     PyObject *pPluginMainFunction = PyObject_GetAttrString(pClassInstance, mainFunctionName.c_str());
@@ -115,8 +122,8 @@ int PluginManager::initPluginInstanceFromClass(std::string moduleName, std::stri
         return 1;
     }
     CallingPoint thisCallingPoint = (CallingPoint) callingPointInt;
-    Py_DECREF(pPluginCallingPointFunction);
-    Py_DECREF(pCallingPointResponse);
+    Py_DECREF(pPluginCallingPointFunction);  // PyObject_GetAttrString returns a new reference, decrement it
+    Py_DECREF(pCallingPointResponse);  // PyObject_CallFunction returns a new reference, decrement it
 
     // we also call to get the list of sensors, then we're done with that function
     PyObject *pGetSensorsResponse = PyObject_CallFunction(pPluginGetSensorsFunction, NULL);
@@ -130,6 +137,7 @@ int PluginManager::initPluginInstanceFromClass(std::string moduleName, std::stri
             PyObject *next = PyList_GetItem(pGetSensorsResponse, i);
             std::string thisString = "";
             try {
+                // TODO: Use PyInt_Check, PyFloat_Check or whatever here, PyBytes_Check?
                 // TODO: Figure out why this isn't caught.
                 // It throws a std::logic_error if you change the return value of a get_sensed_data_list to non-strings, like [2.3, 2.1]
                 // But wrapping it in a try block doesn't actually catch it.  I read online it could be due to a difference in compiler from
@@ -146,15 +154,15 @@ int PluginManager::initPluginInstanceFromClass(std::string moduleName, std::stri
                 printCpp("Could not call to update sensor data function, this is a base class function so either it's improperly overridden or EPS class does not inherit EnergyPlusPlugin base class");
                 return 1;
             }
-            Py_DECREF(next);
-            Py_DECREF(pUpdateFunctionResponse);
+            // Py_DECREF(next);  // PyList_GetItem returns a borrowed reference, DO NOT decrement!
+            Py_DECREF(pUpdateFunctionResponse);  // PyObject_CallFunction returns a new reference, decrement it
         }
     } else {
         printCpp("Invalid return from get_sensed_data_list on class \"" + moduleName + "." + className + ", make sure it returns a list of strings");
         return 1;
     }
-    Py_DECREF(pPluginGetSensorsFunction);
-    Py_DECREF(pGetSensorsResponse);
+    Py_DECREF(pPluginGetSensorsFunction);  // PyObject_GetAttrString returns a new reference, decrement it
+    Py_DECREF(pGetSensorsResponse);  // PyObject_CallFunction returns a new reference, decrement it
 
     // finally we also call to get the list of actuators, and we're done with that function also
     PyObject *pGetActuatorsResponse = PyObject_CallFunction(pPluginGetActuatorsFunction, NULL);
@@ -176,14 +184,14 @@ int PluginManager::initPluginInstanceFromClass(std::string moduleName, std::stri
             }
             // check thisString for NULL due to bad response from the Python function
             thisPlugin.actuatorIDs.push_back(thisString);
-            Py_DECREF(next);
+            // Py_DECREF(next);  // PyList_GetItem returns a borrowed reference, DO NOT decrement!
         }
     } else {
         printCpp("Invalid return from get_actuator_list on class \"" + moduleName + "." + className + ", make sure it returns a list of strings");
         return 1;
     }
-    Py_DECREF(pPluginGetActuatorsFunction);
-    Py_DECREF(pGetActuatorsResponse);
+    Py_DECREF(pPluginGetActuatorsFunction);  // PyObject_GetAttrString returns a new reference, decrement it
+    Py_DECREF(pGetActuatorsResponse);  // PyObject_CallFunction returns a new reference, decrement it
 
     // update the rest of the plugin call instance and store it
     thisPlugin.stringIdentifier = moduleName + "." + className;
@@ -222,7 +230,7 @@ int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariable
                 printCpp("Could not call to update sensor; sensor name = \"" + sensorId + "\", class = \"" + thisCall.stringIdentifier + "\"");
                 return 1;
             }
-            Py_DECREF(pUpdateFunctionResponse);
+            Py_DECREF(pUpdateFunctionResponse);  // PyObject_CallFunction returns new reference, decrement
         }
         // then call the main function
         PyObject *pFunctionResponse = PyObject_CallFunction(thisCall.pPluginMainFunction, NULL);
@@ -249,13 +257,13 @@ int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariable
                     actuators.zoneTwoDamperPosition = actuatedValue;
                     printCpp("Updated Zone Two Damper Position = " + std::to_string(actuators.zoneTwoDamperPosition));
                 }
-                Py_DECREF(next);
+                // Py_DECREF(next);  // PyList_GetItem returns a borrowed reference, do not decrement
             }
         } else {
             printCpp("Invalid return from main() on class \"" + thisCall.stringIdentifier + ", make sure it returns a list of actuated float values");
             return 1;
         }
-        Py_DECREF(pFunctionResponse);
+        Py_DECREF(pFunctionResponse);  // PyObject_CallFunction returns new reference, decrement
     }
     return 0;  // wait til we're all done
 }
