@@ -24,12 +24,17 @@ class MyEMSInterfaceAfterSizing(EMSInterface):
     def get_actuator_list(self) -> List[str]:
         return ["updatedCoilSize"]
 
+    @staticmethod
+    def adjust_coil_size(original_size: float) -> float:
+        # this could be a really deep function, but right now it just rounds
+        return round(original_size)
+
     def ems_main(self) -> List[float]:
         py_print("Inside ems_main function of " + type(self).__name__)
         current_coil_size = self.my_sensed_data['initialCoilSize']
-        new_coil_size = round(current_coil_size)
+        new_coil_size = self.adjust_coil_size(current_coil_size)
         py_print("Current coil size: " + str(current_coil_size))
-        py_print("Imagine doing something like rounding it to %s!" % new_coil_size)
+        py_print("Updated (rounded) coil size: %s!" % new_coil_size)
         return [new_coil_size]
 
 

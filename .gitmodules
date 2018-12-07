@@ -1,3 +1,3 @@
-[submodule "pyms"]
-	path = pyms
-	url = https://github.com/Myoldmopar/PyMS.git
+[submodule "epps"]
+	path = epps
+	url = https://github.com/Myoldmopar/EnergyPlusPythonScripting.git
