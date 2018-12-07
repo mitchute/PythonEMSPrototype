@@ -1,6 +1,6 @@
 from typing import List
 
-from pyms.py_ems_interface import EMSInterface, CallingPointMirror
+from epps.epps_interface import EMSInterface, CallingPointMirror
 from special_py_package.special_functions import py_print
 
 
