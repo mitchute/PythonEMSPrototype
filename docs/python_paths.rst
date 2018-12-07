@@ -1,7 +1,7 @@
 Python Path Information
 =======================
 
-Python paths are a fairly tricky thing.
+The Python library
 
 This prototype tool (and eventually E+) adds these paths.
 
