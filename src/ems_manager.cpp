@@ -272,7 +272,7 @@ int PluginManager::addToPythonPath(std::string path) {
     std::string command = "sys.path.insert(0, \"" + path + "\")";
     if (PyRun_SimpleString(command.c_str()) == 0) {
         printCpp("Successfully added path \"" + path + "\" to the sys.path in Python");
-        PyRun_SimpleString("print(sys.path)");
+        PyRun_SimpleString("print(' EPS : ' + str(sys.path))");
         return 0;
     } else {
         printCpp("ERROR adding \"" + path + "\" to the sys.path in Python");

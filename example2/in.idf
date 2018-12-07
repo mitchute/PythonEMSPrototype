@@ -1,6 +1,0 @@
-! the dir should be relative to the current working directory
-dir,example/my_plugins
-dir,/tmp/my_plugins
-!class,plugins,MyPluginAfterSizing
-class,plugins,MyPluginInsideTimeStep
-class,extra_plugins,MyPluginAfterSizing2

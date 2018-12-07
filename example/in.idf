@@ -1,6 +1,4 @@
 ! the dir should be relative to the current working directory
 dir,example/my_plugins
-dir,/home/edwin/CLionProjects/EmbeddedPython/example2/my_plugins_2
 class,plugins,MyPluginAfterSizing
 class,plugins,MyPluginInsideTimeStep
-class,plugins_2,MyPluginAfterSizing2
