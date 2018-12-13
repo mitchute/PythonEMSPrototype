@@ -76,23 +76,34 @@ main(int argc, char *argv[])
     }
 
     // "run" EnergyPlus, mimicking some big ticket items along the way
-    SensedVariables sensedData;
-    ActuatedVariables actuatedData;
-    printCpp("Performing Sizing");
-    sensedData.initialCoilSize = 1108.73;
-    if (eplusPluginManager.callPluginInstances(CallingPoint::AFTER_SIZING, sensedData, actuatedData) != 0) return 1;
-    printCpp("Inside HVAC TimeStep Loop");
-    sensedData.zoneOneTemperature = 23.4;
-    sensedData.zoneTwoTemperature = 24.3;
-    if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
-    printCpp("Inside HVAC TimeStep Loop");
-    sensedData.zoneOneTemperature = 22.4;
-    sensedData.zoneTwoTemperature = 25.3;
-    if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
-    printCpp("Inside HVAC TimeStep Loop");
-    sensedData.zoneOneTemperature = 20.6;
-    sensedData.zoneTwoTemperature = 27.3;
-    if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) != 0) return 1;
-    printCpp("Timesteps Complete");
-    printCpp("EnergyPlus Complete");
+    try {
+        SensedVariables sensedData;
+        ActuatedVariables actuatedData;
+        printCpp("Performing Sizing");
+        sensedData.initialCoilSize = 1108.73;
+        if (eplusPluginManager.callPluginInstances(CallingPoint::AFTER_SIZING, sensedData, actuatedData) != 0) return 1;
+        printCpp("Inside HVAC TimeStep Loop");
+        sensedData.zoneOneTemperature = 23.4;
+        sensedData.zoneTwoTemperature = 24.3;
+        if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) !=
+            0)
+            return 1;
+        printCpp("Inside HVAC TimeStep Loop");
+        sensedData.zoneOneTemperature = 22.4;
+        sensedData.zoneTwoTemperature = 25.3;
+        if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) !=
+            0)
+            return 1;
+        printCpp("Inside HVAC TimeStep Loop");
+        sensedData.zoneOneTemperature = 20.6;
+        sensedData.zoneTwoTemperature = 27.3;
+        if (eplusPluginManager.callPluginInstances(CallingPoint::HVAC_TIME_STEP_LOOP, sensedData, actuatedData) !=
+            0)
+            return 1;
+        printCpp("Timesteps Complete");
+        printCpp("EnergyPlus Complete");
+    } catch (FatalError & f) {
+        printCpp(" From MAIN: A fatal error occurred!");
+        return 1;
+    }
 }

@@ -1,5 +1,9 @@
 from typing import List
 
+from ctypes import cdll, c_bool, c_char_p, c_double
+import os
+import sys
+
 
 class CallingPointMirror(object):
     """
@@ -19,10 +23,33 @@ class EnergyPlusPlugin(object):
 
     def __init__(self):
         """
-        Constructor for the Plugin interface base class.  Does not take any arguments, just initializes some member vars.
+        Constructor for the Plugin interface base class.  Does not take any arguments, initializes member variables
+        and sets up the connections for callbacks into the C++ API (thermal property calculations, etc.).
         """
         super().__init__()
         self.my_sensed_data = {}
+
+        # we expect the C++ DLL to be available at the root of the installation.
+        # we also expect this interface folder to be placed at the root of the installation
+        # so the DLL is simply one folder up, and at the appropriate name
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        if sys.platform.startswith('linux'):
+            self.api = cdll.LoadLibrary(os.path.join(dir_path, '..', 'libFakeAPI.so'))
+        elif sys.platform.startswith('darwin'):
+            self.api = cdll.LoadLibrary(os.path.join(dir_path, '..', 'libFakeAPI.dylib'))
+        else:  # assume Windows
+            self.api = cdll.LoadLibrary(os.path.join(dir_path, '..', 'FakeAPI.dll'))
+        self._setup_api_function_calls()
+
+    def _setup_api_function_calls(self):
+        self.api.saturationPressureFunctionOfTemperature.argtypes = [c_double]
+        self.api.saturationPressureFunctionOfTemperature.restype = c_double
+        self.api.eplusWarning.argtypes = [c_char_p]
+        self.api.eplusWarning.restype = c_bool
+        self.api.eplusSevereError.argtypes = [c_char_p]
+        self.api.eplusSevereError.restype = c_bool
+        self.api.eplusFatalHalt.argtypes = [c_char_p]
+        self.api.eplusFatalHalt.restype = c_bool
 
     def main(self) -> List[float]:
         """

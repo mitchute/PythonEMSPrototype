@@ -24,4 +24,3 @@ Installation
 ------------
 
 This package can be downloaded for now, but will be available for pip installation once deployed there.
-
