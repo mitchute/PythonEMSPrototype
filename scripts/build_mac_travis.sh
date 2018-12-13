@@ -12,6 +12,7 @@ echo " **** : Running the tool from the build directory"
 # prep for packaging
 mkdir tmp_build
 cp build/FakeEnergyPlus tmp_build/
+cp build/libFakeAPI.dylib tmp_build/
 cp -r example tmp_build/
 cp -r plugin_interface/energyplus_plugin tmp_build/
 
@@ -43,4 +44,4 @@ echo " **** : Launching the tool from the packaging directory"
 cd ..
 
 # create the final package
-mkdir release && tar -zcf release/FakeEnergyPlusWithEPS_Mac.tar.gz -C tmp_build example energyplus_plugin FakeEnergyPlus lib libpython3.6.dylib python3.6
+mkdir release && tar -zcf release/FakeEnergyPlusWithEPS_Mac.tar.gz -C tmp_build example energyplus_plugin FakeEnergyPlus lib libpython3.6.dylib python3.6 libFakeAPI.dylib
