@@ -14,6 +14,7 @@
 #include <Python.h>
 #endif
 
+#include <api.h>
 #include <ems_manager.h>
 #include <simulation.h>
 #include <utility.h>
@@ -266,7 +267,7 @@ int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariable
         Py_DECREF(pFunctionResponse);  // PyObject_CallFunction returns new reference, decrement
         if (isFatalTriggered()) {
             // if the Python code triggered a fatal error, wait until Python is all cleaned up, then raise
-            throw FatalError(fatalMessage());
+            throw FatalError(getFatalMessage());
         }
     }
     return 0;  // wait til we're all done

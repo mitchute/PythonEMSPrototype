@@ -1,6 +1,6 @@
 from typing import List
 
-from ctypes import cdll, c_bool, c_char_p, c_double
+from ctypes import cdll, c_bool, c_char_p, c_double, c_void_p
 import os
 import sys
 
@@ -45,11 +45,11 @@ class EnergyPlusPlugin(object):
         self.api.saturationPressureFunctionOfTemperature.argtypes = [c_double]
         self.api.saturationPressureFunctionOfTemperature.restype = c_double
         self.api.eplusWarning.argtypes = [c_char_p]
-        self.api.eplusWarning.restype = c_bool
+        self.api.eplusWarning.restype = c_void_p
         self.api.eplusSevereError.argtypes = [c_char_p]
-        self.api.eplusSevereError.restype = c_bool
+        self.api.eplusSevereError.restype = c_void_p
         self.api.eplusFatalHalt.argtypes = [c_char_p]
-        self.api.eplusFatalHalt.restype = c_bool
+        self.api.eplusFatalHalt.restype = c_void_p
 
     def main(self) -> List[float]:
         """

@@ -3,9 +3,11 @@
 
 extern "C" {
 double saturationPressureFunctionOfTemperature(double temperatureC);
-bool eplusFatalHalt(char *message);
-bool eplusSevereError(char *message);
-bool eplusWarning(char *message);
+void eplusFatalHalt(char *message);
+void eplusSevereError(char *message);
+void eplusWarning(char *message);
+bool isFatalTriggered();
+const char* getFatalMessage();
 }
 
 #endif //ENERGYPLUSPYEMS_API_H

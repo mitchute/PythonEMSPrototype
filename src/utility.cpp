@@ -26,19 +26,3 @@ std::string sanitizedPath(std::string path) {
     }
     return sanitizedDir;
 }
-
-bool pluginTriggeredFatalError = false;
-std::string pluginTriggeredFatalMessage = "";
-
-void setFatalTriggered(std::string message) {
-    pluginTriggeredFatalError = true;
-    pluginTriggeredFatalMessage = message;
-}
-
-bool isFatalTriggered() {
-    return pluginTriggeredFatalError;
-}
-
-std::string fatalMessage() {
-    return pluginTriggeredFatalMessage;
-}

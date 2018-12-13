@@ -1,8 +1,7 @@
 #include <cmath>
+#include <iostream>
 
 #include <api.h>
-#include <ems_manager.h>
-#include <utility.h>
 
 extern "C" {
 double saturationPressureFunctionOfTemperature(double temperatureC) {
@@ -35,22 +34,27 @@ double saturationPressureFunctionOfTemperature(double temperatureC) {
     }
 }
 
-bool eplusFatalHalt(char* message) {
-    printCpp(message);
-    setFatalTriggered(message);
-    return true;
+bool pluginTriggeredFatalError = false;
+std::string pluginTriggeredFatalMessage = "";
+
+void eplusFatalHalt(char* message) {
+    std::cout << "FATAL ERROR: " << message << std::endl;
+    pluginTriggeredFatalError = true;
+    pluginTriggeredFatalMessage = message;
 }
 
-bool eplusSevereError(char* message) {
-    printCpp("SEVERE ERROR: ");
-    printCpp(message);
-    return true;
+void eplusSevereError(char* message) {
+    std::cout << "SEVERE Error: " << message << std::endl;
 }
 
-bool eplusWarning(char* message) {
-    printCpp("WARNING: " );
-    printCpp(message);
-    return true;
+void eplusWarning(char* message) {
+    std::cout << "Warning: " << message << std::endl;
 }
 
+bool isFatalTriggered() {
+    return pluginTriggeredFatalError;
+}
+const char* getFatalMessage() {
+    return pluginTriggeredFatalMessage.c_str();
+}
 }

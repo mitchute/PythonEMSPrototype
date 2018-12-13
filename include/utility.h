@@ -16,8 +16,4 @@ public:
     const char* what() const noexcept { return m_error.c_str(); } // C++11 version
 };
 
-void setFatalTriggered(std::string message);
-bool isFatalTriggered();
-std::string fatalMessage();
-
 #endif //ENERGYPLUSPYEMS_UTILITY_H
