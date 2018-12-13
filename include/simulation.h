@@ -12,12 +12,16 @@ struct SensedVariables {
 	double zoneOneTemperature = 0;
 	double zoneTwoTemperature = 0;
 	double initialCoilSize = 0;
+  double PCUD_Tin = 0;
+  double Qdot = 0;
 };
 
 struct ActuatedVariables {
 	double zoneOneDamperPosition = 0;
 	double zoneTwoDamperPosition = 0;
 	double updatedCoilSize = 0;
+  double PCUD_Tout = 0;
+  double PCUD_Mdot_Request = 0;
 };
 
 #endif //ENERGYPLUSPYEMS_SIMULATION_H

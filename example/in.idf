@@ -2,3 +2,4 @@
 dir,example/my_plugins
 class,plugins,MyPluginAfterSizing
 class,plugins,MyPluginInsideTimeStep
+class,plugins,MyPluginUserDefinedComponentModel

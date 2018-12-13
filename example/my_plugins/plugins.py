@@ -80,3 +80,33 @@ class MyPluginInsideTimeStep(EnergyPlusPlugin):
         zone_damper2 = self.get_damper_position(zone_temp2)
         py_print("Current zone 2 temp = " + str(zone_temp2) + " results in damper position: " + str(zone_damper2))
         return [zone_damper1, zone_damper2]
+
+class MyPluginUserDefinedComponentModel(EnergyPlusPlugin):
+    """
+    This class gives an example of using a plugin to calculate a plantcomponent:userdefined object
+    This will test the callingpoint UserDefinedComponentModel.
+    The program has an initialize and simulate program and sets values to actuators.
+    """
+
+    def __init__(self):
+        super().__init__()
+        py_print("Constructed plugin derived class: " + type(self).__name__)
+
+    def get_calling_point(self):
+        return CallingPointMirror.User_Defined_Component_Model
+
+    def get_sensed_data_list(self):
+        return ["PCUD_Tin", "Qdot"]
+
+    def get_actuator_list(self):
+        return ["PCUD_Tout", "PCUD_Mdot_Request"]
+
+    def main(self):
+        py_print("Inside main function of " + type(self).__name__)
+        Tin = self.my_sensed_data["PCUD_Tin"]
+        Qdot = self.my_sensed_data["Qdot"]
+        Tout = Tin + (Qdot / (0.5 * 4181.0))
+        py_print("Current inlet temp = " + str(Tin) + " and Qdot = " + str(Qdot) + " results in outlet temp: " + str(Tout))
+        Mdot = Mdot
+        py_print("Constant flowrate of " + str(Mdot))
+        return [Tout, Mdot]
