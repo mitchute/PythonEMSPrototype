@@ -38,6 +38,7 @@ double saturationPressureFunctionOfTemperature(double temperatureC) {
 bool eplusFatalHalt(char* message) {
     printCpp(message);
     setFatalTriggered(message);
+    return true;
 }
 
 bool eplusSevereError(char* message) {

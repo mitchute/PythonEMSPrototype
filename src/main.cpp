@@ -97,6 +97,7 @@ main(int argc, char *argv[])
         printCpp("Timesteps Complete");
         printCpp("EnergyPlus Complete");
     } catch (FatalError & f) {
+		(void)f;
         printCpp(" From MAIN: A fatal error occurred!");
         return 0;  // still returning zero so testing looks nice...
     }
