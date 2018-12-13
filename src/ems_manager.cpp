@@ -264,6 +264,10 @@ int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariable
             return 1;
         }
         Py_DECREF(pFunctionResponse);  // PyObject_CallFunction returns new reference, decrement
+        if (isFatalTriggered()) {
+            // if the Python code triggered a fatal error, wait until Python is all cleaned up, then raise
+            throw FatalError(fatalMessage());
+        }
     }
     return 0;  // wait til we're all done
 }

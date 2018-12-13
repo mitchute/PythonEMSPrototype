@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include <api.h>
+#include <ems_manager.h>
 #include <utility.h>
 
 extern "C" {
@@ -36,7 +37,7 @@ double saturationPressureFunctionOfTemperature(double temperatureC) {
 
 bool eplusFatalHalt(char* message) {
     printCpp(message);
-    throw FatalError(message);
+    setFatalTriggered(message);
 }
 
 bool eplusSevereError(char* message) {
