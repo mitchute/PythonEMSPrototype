@@ -3,7 +3,6 @@
 
 #include <api.h>
 
-extern "C" {
 double saturationPressureFunctionOfTemperature(double temperatureC) {
     // returns Pascals
     double const tempKelvin = temperatureC + 273.15;
@@ -38,7 +37,7 @@ bool pluginTriggeredFatalError = false;
 std::string pluginTriggeredFatalMessage = "";
 
 void eplusFatalHalt(char* message) {
-    std::cout << "FATAL ERROR: " << message << std::endl;
+    std::cout << "FATAL ERROR FROM PLUGIN: \"" << message << "\" *** This plugin instance will finish before abort\"" << std::endl;
     pluginTriggeredFatalError = true;
     pluginTriggeredFatalMessage = message;
 }
@@ -56,5 +55,4 @@ bool isFatalTriggered() {
 }
 const char* getFatalMessage() {
     return pluginTriggeredFatalMessage.c_str();
-}
 }
