@@ -8,12 +8,12 @@
 #endif
 
 extern "C" {
-double FAKE_EPLUS_API saturationPressureFunctionOfTemperature(double temperatureC);
-void FAKE_EPLUS_API eplusFatalHalt(char *message);
-void FAKE_EPLUS_API eplusSevereError(char *message);
-void FAKE_EPLUS_API eplusWarning(char *message);
-bool FAKE_EPLUS_API isFatalTriggered();
-const char* FAKE_EPLUS_API getFatalMessage();
+FAKE_EPLUS_API double saturationPressureFunctionOfTemperature(double temperatureC);
+FAKE_EPLUS_API void eplusFatalHalt(char *message);
+FAKE_EPLUS_API void eplusSevereError(char *message);
+FAKE_EPLUS_API void eplusWarning(char *message);
+FAKE_EPLUS_API bool isFatalTriggered();
+FAKE_EPLUS_API const char* getFatalMessage();
 }
 
 #endif //ENERGYPLUSPYEMS_API_H
