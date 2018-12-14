@@ -25,7 +25,7 @@ enum class CallingPoint {
     // this is mirrored in the Python code as py_ems_interface.CallingPointMirror class
     AFTER_SIZING = 0,
     HVAC_TIME_STEP_LOOP = 1,
-    User_Defined_Component_Model = 2
+    USER_DEFINED_COMPONENT_MODEL = 2
 };
 
 struct PluginInstance {

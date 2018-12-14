@@ -93,7 +93,7 @@ class MyPluginUserDefinedComponentModel(EnergyPlusPlugin):
         py_print("Constructed plugin derived class: " + type(self).__name__)
 
     def get_calling_point(self):
-        return CallingPointMirror.User_Defined_Component_Model
+        return CallingPointMirror.USER_DEFINED_COMPONENT_MODEL
 
     def get_sensed_data_list(self):
         return ["PCUD_Tin", "Qdot"]
@@ -107,6 +107,6 @@ class MyPluginUserDefinedComponentModel(EnergyPlusPlugin):
         Qdot = self.my_sensed_data["Qdot"]
         Tout = Tin + (Qdot / (0.5 * 4181.0))
         py_print("Current inlet temp = " + str(Tin) + " and Qdot = " + str(Qdot) + " results in outlet temp: " + str(Tout))
-        Mdot = Mdot
+        Mdot = 0.5
         py_print("Constant flowrate of " + str(Mdot))
         return [Tout, Mdot]

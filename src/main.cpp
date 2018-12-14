@@ -88,7 +88,7 @@ main(int argc, char *argv[])
     printCpp("User Defined Component Model");
     sensedData.PCUD_Tin = 80;
     sensedData.Qdot = 0.0;  
-    if (eplusPluginManager.callPluginInstances(CallingPoint::User_Defined_Component_Model, sensedData, actuatedData) != 0) return 1;    
+    if (eplusPluginManager.callPluginInstances(CallingPoint::USER_DEFINED_COMPONENT_MODEL, sensedData, actuatedData) != 0) return 1;    
     printCpp("Inside HVAC TimeStep Loop");
     sensedData.zoneOneTemperature = 22.4;
     sensedData.zoneTwoTemperature = 25.3;
@@ -96,7 +96,7 @@ main(int argc, char *argv[])
     printCpp("User Defined Component Model");
     sensedData.PCUD_Tin = 80;
     sensedData.Qdot = 1.0;  
-    if (eplusPluginManager.callPluginInstances(CallingPoint::User_Defined_Component_Model, sensedData, actuatedData) != 0) return 1;    
+    if (eplusPluginManager.callPluginInstances(CallingPoint::USER_DEFINED_COMPONENT_MODEL, sensedData, actuatedData) != 0) return 1;    
     printCpp("Inside HVAC TimeStep Loop");
     sensedData.zoneOneTemperature = 20.6;
     sensedData.zoneTwoTemperature = 27.3;
@@ -104,7 +104,7 @@ main(int argc, char *argv[])
     printCpp("User Defined Component Model");
     sensedData.PCUD_Tin = 80;
     sensedData.Qdot = 2.0;  
-    if (eplusPluginManager.callPluginInstances(CallingPoint::User_Defined_Component_Model, sensedData, actuatedData) != 0) return 1;    
+    if (eplusPluginManager.callPluginInstances(CallingPoint::USER_DEFINED_COMPONENT_MODEL, sensedData, actuatedData) != 0) return 1;    
     printCpp("Timesteps Complete");
     printCpp("EnergyPlus Complete");
 }
