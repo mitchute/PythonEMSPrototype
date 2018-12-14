@@ -2,7 +2,7 @@
 #define ENERGYPLUSPYEMS_API_H
 
 #if _WIN32 || _MSC_VER
-#define FAKE_EPLUS_API __declspec(dllimport)
+#define FAKE_EPLUS_API __declspec( dllexport )
 #else
 #define FAKE_EPLUS_API
 #endif
