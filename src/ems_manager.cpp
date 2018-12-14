@@ -19,6 +19,17 @@
 #include <simulation.h>
 #include <utility.h>
 
+#if _WIN32 || _MSC_VER
+#define FAKE_EPLUS_IMPORT_API __declspec( dllimport )
+#else
+#define FAKE_EPLUS_IMPORT_API
+#endif
+
+extern "C" {
+FAKE_EPLUS_API bool isFatalTriggered();
+FAKE_EPLUS_API const char* getFatalMessage();
+}
+
 std::string const mainFunctionName = "main";
 std::string const callingPointFunctionName = "get_calling_point";
 std::string const getSensorsFunctionName = "get_sensed_data_list";
