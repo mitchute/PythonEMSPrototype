@@ -38,6 +38,7 @@ std::string pluginTriggeredFatalMessage = "";
 
 void eplusFatalHalt(char* message) {
     std::cout << "FATAL ERROR FROM PLUGIN: \"" << message << "\" *** This plugin instance will finish before abort\"" << std::endl;
+    std::cout << "  (Program isn\'t actually going to fatal for now)" << std::endl;
     pluginTriggeredFatalError = true;
     pluginTriggeredFatalMessage = message;
 }

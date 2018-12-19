@@ -29,7 +29,6 @@ class EnergyPlusPlugin(object):
         super().__init__()
         self.my_sensed_data = {}
         self.api = None  # set up inside _setup_api_function_calls()
-
         self._setup_api_function_calls()
 
     def main(self) -> List[float]:
