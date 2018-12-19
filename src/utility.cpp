@@ -4,7 +4,7 @@
 #include <utility.h>
 
 void printCpp(std::string message) {
-    std::cout << " C++  : " << message << std::endl;
+    std::cout << " C++ : " << message << std::endl;
 }
 
 std::string sanitizedPath(std::string path) {

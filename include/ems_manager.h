@@ -27,35 +27,35 @@ enum class CallingPoint {
     HVAC_TIME_STEP_LOOP = 1
 };
 
-struct PyEMSInstance {
-    PyEMSInstance() = default;
+struct PluginInstance {
+    PluginInstance() = default;
     CallingPoint callingPoint;  // which EMS calling point triggers this EMS function call
     std::string stringIdentifier; // for diagnostic reporting
-    PyObject *pEMSMainFunction;  // pointer to the main EMS function
-    PyObject *pEMSUpdateSensorFunction;  // pointer to the function to update the sensor value
+    PyObject *pPluginMainFunction;  // pointer to the main EMS function
+    PyObject *pPluginUpdateSensorFunction;  // pointer to the function to update the sensor value
     std::vector<std::string> sensorIDs;  // a list of sensor IDs - currently strings, but in the future integer-ish
     std::vector<std::string> actuatorIDs;  // a list of actuator IDs - currently strings, but in the future integer-ish
 };
 
-class EMSManager {
+class PluginManager {
 public:
-    std::vector<PyEMSInstance> pyEMSInstances;
-    EMSManager() {
-        printCpp("Inside EMSManager constructor, about to call initialize");
+    std::vector<PluginInstance> pluginInstances;
+    PluginManager() {
+        printCpp("Inside PluginManager constructor, about to call initialize");
         // from https://docs.python.org/3/c-api/init.html
         // If arg 0, it skips init registration of signal handlers, which might be useful when Python is embedded.
         Py_InitializeEx(0);
         PyRun_SimpleString("import sys");
-        printCpp("Inside EMSManager constructor, completed call to initialize");
+        printCpp("Inside PluginManager constructor, completed call to initialize");
     }
-    ~EMSManager() {
-        printCpp("Inside EMSManager destructor, about to call finalize");
+    ~PluginManager() {
+        printCpp("Inside PluginManager destructor, about to call finalize");
         Py_FinalizeEx();
-        printCpp("Inside EMSManager destructor, completed call to finalize");
+        printCpp("Inside PluginManager destructor, completed call to finalize");
     }
     int addToPythonPath(std::string path);
-    int initPyEMSInstanceFromClass(std::string fileName, std::string functionName);
-    int callEMSInstances(CallingPoint callingPoint, SensedVariables &sensors, ActuatedVariables &actuators);
+    int initPluginInstanceFromClass(std::string fileName, std::string functionName);
+    int callPluginInstances(CallingPoint callingPoint, SensedVariables &sensors, ActuatedVariables &actuators);
 };
 
 #endif //ENERGYPLUSPYEMS_EMS_MANAGER_H

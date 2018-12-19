@@ -10,7 +10,7 @@ cd ..
 # test out the built binary
 cp /C/Python37/python37.dll build/Release
 echo " **** : Running the tool from the build directory"
-./build/Release/EnergyPlusPyEMS example/in.idf
+./build/Release/FakeEnergyPlus example/in.idf
 
 # grab and extract the embeddable python to get a zip copy of the standard library
 mkdir python_embed
@@ -21,13 +21,13 @@ cd ..
 
 # prep for packaging
 mkdir tmp_build
-cp build/Release/EnergyPlusPyEMS.exe tmp_build/
+cp build/Release/FakeEnergyPlus.exe tmp_build/
 cp /C/Python37/python37.dll tmp_build/
 cp /C/Python37/python.exe tmp_build/
 cp python_embed/python37.zip tmp_build/
 cp -r example tmp_build/
-cp -r pyms/pyms tmp_build/
+cp -r plugin_interface/energyplus_plugin tmp_build/
 
 # create the final package
 mkdir release
-/C/Program\ Files/7-zip/7z.exe a release/PyEMSPrototype_Win.zip ./tmp_build/*
+/C/Program\ Files/7-zip/7z.exe a release/FakeEnergyPlusWithEPS_Win.zip ./tmp_build/*
