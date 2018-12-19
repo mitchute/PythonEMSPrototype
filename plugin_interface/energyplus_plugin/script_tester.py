@@ -146,7 +146,7 @@ class EnergyPlusPluginTesting(object):
                         print("ERROR : main() function not overridden, or is broken; reason: " + str(e))
                         return 1
 
-                    if(isinstance(response, list):
+                    if isinstance(response, list):
                         print("   OK : main() returns a list, this is the expected condition")
                     else:
                         print("ERROR : Bad return from main(); it must return a list of floats!")
@@ -154,9 +154,10 @@ class EnergyPlusPluginTesting(object):
 
                     bad_actuated_value = False
                     for i, val in enumerate(response):
-                        if isinstance(val, float):
+                        try:
+                            float(val)
                             print("   OK : argument #%s from main is a float" % i)
-                        else:
+                        except ValueError:
                             bad_actuated_value = True
                             print("ERROR : argument #%s from main must be a float!" % i)
                     if bad_actuated_value:
@@ -190,4 +191,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

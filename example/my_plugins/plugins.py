@@ -33,6 +33,13 @@ class MyPluginAfterSizing(EnergyPlusPlugin):
         new_coil_size = self.adjust_coil_size(current_coil_size)
         py_print("Current coil size: " + str(current_coil_size))
         py_print("Updated (rounded) coil size: %s!" % new_coil_size)
+        py_print("Also, calculating pressure at T = 23C")
+        pressure = self.api.saturationPressureFunctionOfTemperature(23.0)
+        py_print("Got pressure back as: " + str(pressure))
+        py_print("Uh oh, a warning!")
+        self.api.eplusWarning(b"Here's my warning!")
+        py_print("Uh oh, a severe!!!")
+        self.api.eplusSevereError(b"Here's my SEVERE!")
         return [new_coil_size]
 
 
@@ -46,6 +53,7 @@ class MyPluginInsideTimeStep(EnergyPlusPlugin):
 
     def __init__(self):
         super().__init__()
+        self.counter = 0
         py_print("Constructed plugin derived class: " + type(self).__name__)
 
     def get_calling_point(self):
@@ -72,6 +80,9 @@ class MyPluginInsideTimeStep(EnergyPlusPlugin):
         return damper_position
 
     def main(self):
+        self.counter += 1
+        if self.counter == 3:
+            self.api.eplusFatalHalt(b"Fatal Error!")
         py_print("Inside main function of " + type(self).__name__)
         zone_temp1 = self.my_sensed_data["zoneOneTemperature"]
         zone_damper1 = self.get_damper_position(zone_temp1)

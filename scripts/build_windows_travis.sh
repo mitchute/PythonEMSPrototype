@@ -22,6 +22,7 @@ cd ..
 # prep for packaging
 mkdir tmp_build
 cp build/Release/FakeEnergyPlus.exe tmp_build/
+cp build/Release/FakeAPI.dll tmp_build/
 cp /C/Python37/python37.dll tmp_build/
 cp /C/Python37/python.exe tmp_build/
 cp python_embed/python37.zip tmp_build/

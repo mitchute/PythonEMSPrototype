@@ -12,9 +12,10 @@ echo " **** : Running the tool from the build directory"
 # prep for packaging
 mkdir tmp_build
 cp build/FakeEnergyPlus tmp_build/
+cp build/libFakeAPI.so tmp_build/
 cp -r example tmp_build/
 cp -r plugin_interface/energyplus_plugin tmp_build/
 
 # create final package
 mkdir release
-tar -zcvf release/FakeEnergyPlusWithEPS_Linux.tar.gz -C tmp_build example energyplus_plugin FakeEnergyPlus
+tar -zcvf release/FakeEnergyPlusWithEPS_Linux.tar.gz -C tmp_build example energyplus_plugin libFakeAPI.so FakeEnergyPlus

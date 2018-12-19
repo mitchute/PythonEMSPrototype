@@ -46,7 +46,7 @@ public:
         // from https://docs.python.org/3/c-api/init.html
         // If arg 0, it skips init registration of signal handlers, which might be useful when Python is embedded.
         Py_InitializeEx(0);
-        PyRun_SimpleString("import sys");
+        PyRun_SimpleString("import sys");  // allows us to report sys.path later
         printCpp("Inside PluginManager constructor, completed call to initialize");
     }
     ~PluginManager() {
