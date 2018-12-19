@@ -1,6 +1,6 @@
 from typing import List
 
-from ctypes import cdll, c_bool, c_char_p, c_double, c_void_p
+from ctypes import cdll, c_char_p, c_double, c_void_p
 import os
 import sys
 
@@ -12,6 +12,7 @@ class CallingPointMirror(object):
     """
     AFTER_SIZING = 0
     HVAC_TIME_STEP_LOOP = 1
+    USER_DEFINED_COMPONENT_MODEL = 2
 
 
 class EnergyPlusPlugin(object):

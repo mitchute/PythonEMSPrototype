@@ -233,6 +233,10 @@ int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariable
                 valueToPass = sensors.zoneTwoTemperature;
             } else if (sensorId == "initialCoilSize") {
                 valueToPass = sensors.initialCoilSize;
+            } else if (sensorId == "PCUD_Tin") {
+                valueToPass = sensors.PCUD_Tin;
+            } else if (sensorId == "Qdot") {
+                valueToPass = sensors.Qdot;
             } else {
                 printCpp("Bad sensor value entered, did not find it available for this simulation: \"" + sensorId + "\"");
                 return 1;
@@ -268,6 +272,12 @@ int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariable
                 } else if (thisActuatorString == "zoneTwoDamperPosition") {
                     actuators.zoneTwoDamperPosition = actuatedValue;
                     printCpp("Updated Zone Two Damper Position = " + std::to_string(actuators.zoneTwoDamperPosition));
+                } else if (thisActuatorString == "PCUD_Tout") {
+                    actuators.PCUD_Tout = actuatedValue;
+                    printCpp("Updated PCUD Outlet Temp = " + std::to_string(actuators.PCUD_Tout));
+                } else if (thisActuatorString == "PCUD_Mdot_Request") {
+                    actuators.PCUD_Mdot_Request = actuatedValue;
+                    printCpp("Updated PCUD Mdot = " + std::to_string(actuators.PCUD_Mdot_Request));
                 }
                 // Py_DECREF(next);  // PyList_GetItem returns a borrowed reference, do not decrement
             }

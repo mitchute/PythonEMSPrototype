@@ -24,7 +24,8 @@ enum class CallingPoint {
     // DO NOT use negative values here, the PyLong_AsLong function returns -1 as an erroneous flag, and we'd have to add add'l error checking (PyErr_Occurred())
     // this is mirrored in the Python code as py_ems_interface.CallingPointMirror class
     AFTER_SIZING = 0,
-    HVAC_TIME_STEP_LOOP = 1
+    HVAC_TIME_STEP_LOOP = 1,
+    USER_DEFINED_COMPONENT_MODEL = 2
 };
 
 struct PluginInstance {
