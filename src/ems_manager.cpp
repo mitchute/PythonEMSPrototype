@@ -14,9 +14,21 @@
 #include <Python.h>
 #endif
 
+#include <api.h>
 #include <ems_manager.h>
 #include <simulation.h>
 #include <utility.h>
+
+#if _WIN32 || _MSC_VER
+#define FAKE_EPLUS_IMPORT_API __declspec( dllimport )
+#else
+#define FAKE_EPLUS_IMPORT_API
+#endif
+
+extern "C" {
+FAKE_EPLUS_API bool isFatalTriggered();
+FAKE_EPLUS_API const char* getFatalMessage();
+}
 
 std::string const mainFunctionName = "main";
 std::string const callingPointFunctionName = "get_calling_point";
@@ -264,6 +276,10 @@ int PluginManager::callPluginInstances(CallingPoint callingPoint, SensedVariable
             return 1;
         }
         Py_DECREF(pFunctionResponse);  // PyObject_CallFunction returns new reference, decrement
+//        if (isFatalTriggered()) {
+//            // if the Python code triggered a fatal error, wait until Python is all cleaned up, then raise
+//            throw FatalError(getFatalMessage());
+//        }
     }
     return 0;  // wait til we're all done
 }
