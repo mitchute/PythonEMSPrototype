@@ -45,10 +45,8 @@ else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_LIBRARIES}")
 endif()
 
-# this brings in just the python package subdirectory of the pyms submodule
-add_custom_command(
-    TARGET FakeEnergyPlus
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/plugin_interface/energyplus_plugin $<TARGET_FILE_DIR:FakeEnergyPlus>/energyplus_plugin
-    COMMENT "Copying PyMS directory to build folder"
+add_custom_target(CopyPluginDirectory ALL
+    ${CMAKE_SOURCE_DIR}/scripts/copy_plugin_to_build_dir.sh ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:FakeEnergyPlus>
+    COMMENT "Copying PluginInterface directory to build folder"
+    DEPENDS FakeEnergyPlus
 )

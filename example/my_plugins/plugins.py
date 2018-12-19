@@ -81,6 +81,7 @@ class MyPluginInsideTimeStep(EnergyPlusPlugin):
         py_print("Current zone 2 temp = " + str(zone_temp2) + " results in damper position: " + str(zone_damper2))
         return [zone_damper1, zone_damper2]
 
+
 class MyPluginUserDefinedComponentModel(EnergyPlusPlugin):
     """
     This class gives an example of using a plugin to calculate a plantcomponent:userdefined object
@@ -93,7 +94,7 @@ class MyPluginUserDefinedComponentModel(EnergyPlusPlugin):
         py_print("Constructed plugin derived class: " + type(self).__name__)
 
     def get_calling_point(self):
-        return CallingPointMirror.USER_DEFINED_COMPONENT_MODEL
+        return 2
 
     def get_sensed_data_list(self):
         return ["PCUD_Tin", "Qdot"]
